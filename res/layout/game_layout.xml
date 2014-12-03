@@ -1,0 +1,19 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="horizontal"
+    tools:context=".MainActivity" >
+
+    <com.nk.collisiontest.GameView
+        android:id="@+id/imageView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:contentDescription="@string/empty_string"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_launcher" 
+        android:background="@drawable/bg1"/>
+
+</LinearLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">collisiontest</string>
+    <string name="action_settings">Settings</string>
+    <string name="empty_string"></string>
+    <string name="about_title">About [GAMETITLE]</string>    
+    <string name="level_title">Level selection</string>    
+
+</resources>
