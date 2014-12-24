@@ -1,5 +1,6 @@
 package com.nk.bloxmania;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -54,7 +55,8 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 	
 	@Override
 	public void run() {
-		while (getVisibility() != View.GONE){
+		Log.w("nk", "Scrolling background started.");
+		while (!done && getVisibility() != View.GONE){
 			try {
 				drawBackground();
 				postInvalidate();
@@ -108,7 +110,7 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 		mainCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
 	}
 	
-	protected void destroyImages(){
-		bgImg.recycle();
+	public void finish(){
+		((Activity)getContext()).finish();
 	}
 }

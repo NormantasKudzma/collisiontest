@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.collisiontest.R;
-
 public class GameActivity extends Activity {
 	
 	@Override
@@ -18,8 +16,7 @@ public class GameActivity extends Activity {
 	public void onBackPressed() {
 		saveSettings();
 		killThread();
-		Intent i = new Intent(GameActivity.this, MainActivity.class);
-		startActivity(i);
+		finish();
 	}
 	
 	@Override
@@ -47,6 +44,6 @@ public class GameActivity extends Activity {
 	}
 	
 	void killThread(){
-		((GameView)findViewById(R.id.imageView1)).done = true;
+		((GameView)findViewById(R.id.imageView1)).isDone(true);
 	}
 }

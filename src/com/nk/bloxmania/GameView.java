@@ -7,13 +7,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
@@ -23,9 +18,7 @@ import android.hardware.SensorManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceView;
 import android.view.View;
-import android.view.WindowManager;
 
 public class GameView extends ScrollBackgroundView implements Runnable, SensorEventListener {
 	GameEngine engine;
@@ -185,7 +178,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		        					if (levelCompleted && selectedLevel + 1 == LevelManager.LEVELS_UNLOCKED){
 			        					LevelManager.LEVELS_UNLOCKED++;
 		        					}
-		        					destroyImages();
+		        					finish();
 		        					Intent intent = new Intent(getContext(), MainActivity.class);
 		        		            ((Activity)getContext()).startActivity(intent);
 		        					return true;
@@ -198,7 +191,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 			        					LevelManager.LEVELS_UNLOCKED++;
 		        					}
 		        					selectedLevel++;
-		        					destroyImages();
+		        					finish();
 		        					Activity host = (Activity) getContext();
 		        					host.recreate();
 		        					return true;

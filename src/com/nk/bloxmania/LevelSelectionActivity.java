@@ -7,14 +7,11 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Space;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
-import com.example.collisiontest.R;
 
 public class LevelSelectionActivity extends Activity{
 	public static final int BASE_BUTTON_SIZE = 72;
@@ -22,6 +19,7 @@ public class LevelSelectionActivity extends Activity{
 	public static final int ROW_SIZE = 8;
 	
 	private Typeface font;
+	ScrollBackgroundView sbv;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +32,7 @@ public class LevelSelectionActivity extends Activity{
 	}
 	
 	void customizeBackground(){
-		ScrollBackgroundView sbv = (ScrollBackgroundView)findViewById(R.id.level_select_scroll_background);
+		sbv = (ScrollBackgroundView)findViewById(R.id.level_select_scroll_background);
 		sbv.setScrollSpeedX(0);
 		sbv.setScrollSpeedY(0.7f);
 	}
@@ -113,7 +111,12 @@ public class LevelSelectionActivity extends Activity{
 	
 	@Override
 	public void onBackPressed() {
-		Intent i = new Intent(LevelSelectionActivity.this, MainActivity.class);
-		startActivity(i);
+		finish();
+	}
+
+	@Override
+	public void finish() {
+		sbv.isDone(true);
+		super.finish();
 	}
 }

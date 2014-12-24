@@ -9,12 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.collisiontest.R;
-
 public class MainActivity extends Activity{
 	public static final int BASE_BUTTON_SIZE = 72;
 	public static final int FONT_SIZE = BASE_BUTTON_SIZE / 2;
+	
 	Typeface font;
+	ScrollBackgroundView sbv;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +34,7 @@ public class MainActivity extends Activity{
 	}
 	
 	void customizeBackground(){
-		ScrollBackgroundView sbv = (ScrollBackgroundView)findViewById(R.id.menu_scroll_background);
+		sbv = (ScrollBackgroundView)findViewById(R.id.menu_scroll_background);
 		sbv.setScrollSpeedX(0.5f);
 		sbv.setScrollSpeedY(0.5f);
 	}
@@ -46,38 +46,35 @@ public class MainActivity extends Activity{
 		Button b1 = (Button)findViewById(R.id.button_play);
 		b1.setTypeface(font);
 		b1.setTextSize(FONT_SIZE);
-		b1.setOnTouchListener(new View.OnTouchListener() {
+		b1.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
+			public void onClick(View v) {
 				Intent i = new Intent(MainActivity.this, LevelSelectionActivity.class);
 				startActivity(i);
-				return true;
 			}
 		});
 		
 		Button b2 = (Button)findViewById(R.id.button_options);
 		b2.setTypeface(font);
 		b2.setTextSize(FONT_SIZE);
-		b2.setOnTouchListener(new View.OnTouchListener() {
+		b2.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
+			public void onClick(View v) {
 				// CALL OPTIONS
-				return false;
 			}
 		});
 		
 		Button b3 = (Button)findViewById(R.id.button_about);
 		b3.setTypeface(font);
 		b3.setTextSize(FONT_SIZE);
-		b3.setOnTouchListener(new View.OnTouchListener() {
-			
+		b3.setOnClickListener(new View.OnClickListener() {
+
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
+			public void onClick(View arg0) {
 				Intent i = new Intent(MainActivity.this, AboutActivity.class);
 				startActivity(i);
-				return true;
 			}
 		});
 	}
@@ -86,5 +83,11 @@ public class MainActivity extends Activity{
 		LevelManager.updateDeaths(GameView.selectedLevel, GameEngine.DEATH_COUNT);
 		GameEngine.DEATH_COUNT = 0;
 		LevelManager.saveSettings();
+	}
+	
+	@Override
+	public void finish() {
+		sbv.isDone(true);
+		super.finish();
 	}
 }

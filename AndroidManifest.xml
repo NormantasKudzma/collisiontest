@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.collisiontest"
+    package="com.nk.bloxmania"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -20,6 +20,7 @@
         <activity
             android:name="com.nk.bloxmania.MainActivity"
             android:label="@string/app_name"
+            android:launchMode="singleInstance"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,14 +30,17 @@
         </activity>
         <activity 
             android:name="com.nk.bloxmania.AboutActivity"
+            android:launchMode="singleInstance"
             android:screenOrientation="landscape">
         </activity>
         <activity 
             android:name="com.nk.bloxmania.GameActivity"
+            android:launchMode="singleInstance"
             android:screenOrientation="landscape">
         </activity>
         <activity 
             android:name="com.nk.bloxmania.LevelSelectionActivity"
+            android:launchMode="singleInstance"
             android:screenOrientation="landscape">
         </activity>
     </application>

@@ -1,7 +1,5 @@
 package com.nk.bloxmania;
 
-import com.example.collisiontest.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -11,6 +9,7 @@ import android.widget.TextView;
 public class AboutActivity extends Activity{
 	public static final int BIG_FONT_SIZE = 72;
 	
+	ScrollBackgroundView sbv;
 	Typeface font;
 	
 	@Override
@@ -31,14 +30,14 @@ public class AboutActivity extends Activity{
 	}
 	
 	void customizeBackground(){
-		ScrollBackgroundView sbv = (ScrollBackgroundView)findViewById(R.id.menu_scroll_background);
+		sbv = (ScrollBackgroundView)findViewById(R.id.menu_scroll_background);
 		sbv.setScrollSpeedX(0.2f);
 		sbv.setScrollSpeedY(0.3f);
 	}
 	
 	@Override
 	public void onBackPressed() {
-		Intent i = new Intent(AboutActivity.this, MainActivity.class);
-		startActivity(i);
+		sbv.isDone(true);
+		finish();
 	}
 }
