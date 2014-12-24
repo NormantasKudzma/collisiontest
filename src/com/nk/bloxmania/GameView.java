@@ -111,6 +111,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 
 	@Override
 	public void run() {
+		long t0, t1, delta;
 		try {
 			Log.w("GameView", "DRAW THREAD STARTED");
 			loadLevel();
@@ -130,65 +131,23 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 				while (paused){
 					wait();
 				}
+				t0 = System.currentTimeMillis();
 				performDraws();
 				engine.movePlayerVertical();
 				engine.movePlayerHorizontal(screenRotation);
 				drawPlayer();
 				showDeathsText();
 				postInvalidate();
-				Thread.sleep(sleepInterval);
-			}
-			setOnTouchListener(new View.OnTouchListener(){
-
-				@Override
-				public boolean onTouch(View v, MotionEvent e) {
-					int pid = e.getPointerId(0);
-				    int action = e.getActionMasked();
-				    int x = (int)e.getX(pid);
-		        	int y = (int)e.getY(pid);
-				    switch (action){
-			        	case MotionEvent.ACTION_DOWN: { 
-			        		for (GameButton i : buttons){
-			        			if (i.r.contains(x, y)){
-			        				if (i.text.equals("Back to menu")){
-			        					// Add up deaths, show main menu
-			        					LevelManager.updateDeaths(selectedLevel, GameEngine.DEATH_COUNT);
-			        					LevelManager.saveSettings();
-			        					GameEngine.DEATH_COUNT = 0;
-			        					if (levelCompleted && selectedLevel + 1 == LevelManager.LEVELS_UNLOCKED){
-				        					LevelManager.LEVELS_UNLOCKED++;
-			        					}
-			        					Intent intent = new Intent(getContext(), MainActivity.class);
-			        		            ((Activity)getContext()).startActivity(intent);
-			        					return true;
-			        				}
-			        				if (levelCompleted){
-			        					// Add up deaths, start next level
-			        					LevelManager.updateDeaths(selectedLevel, GameEngine.DEATH_COUNT);
-			        					GameEngine.DEATH_COUNT = 0;
-			        					if (selectedLevel + 1 == LevelManager.LEVELS_UNLOCKED){
-				        					LevelManager.LEVELS_UNLOCKED++;
-			        					}
-			        					selectedLevel++;
-			        					Activity host = (Activity) getContext();
-			        					host.recreate();
-			        					return true;
-			        				}
-			        				else {
-			        					// Increment deaths, restart level
-			        					LevelManager.updateDeaths(selectedLevel, GameEngine.DEATH_COUNT);
-			        					Activity host = (Activity) getContext();
-			        					host.recreate();
-			        					return true;
-			        				}
-			        			}
-			        		}
-			        	}
-				    }
-					return false;
+				t1 = System.currentTimeMillis();
+				delta = t0 + sleepInterval - t1;
+				if (delta > 0){
+					Thread.sleep(delta);
 				}
-				
-			});
+				else {
+					Thread.sleep(trivialInterval);
+				}
+			}
+			setUpButtonListeners();
 			if (levelCompleted){
 				showCenteredText("Level completed!");
 				showLeftButton("Continue");
@@ -203,6 +162,61 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		catch (Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	void setUpButtonListeners(){
+		setOnTouchListener(new View.OnTouchListener(){
+
+			@Override
+			public boolean onTouch(View v, MotionEvent e) {
+				int pid = e.getPointerId(0);
+			    int action = e.getActionMasked();
+			    int x = (int)e.getX(pid);
+	        	int y = (int)e.getY(pid);
+			    switch (action){
+		        	case MotionEvent.ACTION_DOWN: { 
+		        		for (GameButton i : buttons){
+		        			if (i.r.contains(x, y)){
+		        				if (i.text.equals("Back to menu")){
+		        					// Add up deaths, show main menu
+		        					LevelManager.updateDeaths(selectedLevel, GameEngine.DEATH_COUNT);
+		        					LevelManager.saveSettings();
+		        					GameEngine.DEATH_COUNT = 0;
+		        					if (levelCompleted && selectedLevel + 1 == LevelManager.LEVELS_UNLOCKED){
+			        					LevelManager.LEVELS_UNLOCKED++;
+		        					}
+		        					destroyImages();
+		        					Intent intent = new Intent(getContext(), MainActivity.class);
+		        		            ((Activity)getContext()).startActivity(intent);
+		        					return true;
+		        				}
+		        				if (levelCompleted){
+		        					// Add up deaths, start next level
+		        					LevelManager.updateDeaths(selectedLevel, GameEngine.DEATH_COUNT);
+		        					GameEngine.DEATH_COUNT = 0;
+		        					if (selectedLevel + 1 == LevelManager.LEVELS_UNLOCKED){
+			        					LevelManager.LEVELS_UNLOCKED++;
+		        					}
+		        					selectedLevel++;
+		        					destroyImages();
+		        					Activity host = (Activity) getContext();
+		        					host.recreate();
+		        					return true;
+		        				}
+		        				else {
+		        					// Increment deaths, restart level
+		        					LevelManager.updateDeaths(selectedLevel, GameEngine.DEATH_COUNT);
+		        					Activity host = (Activity) getContext();
+		        					host.recreate();
+		        					return true;
+		        				}
+		        			}
+		        		}
+		        	}
+			    }
+				return false;
+			}			
+		});
 	}
 	
 	void showLeftButton(String txt){
@@ -269,8 +283,9 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		paint.setColor(Color.BLACK);
 		int viewPortX = engine.getViewPortX();
 		ArrayList<GameBlock> level = engine.getLevel();
-		for (GameBlock gb : level){
-			Rect r = gb.r;
+		Rect r;
+		for (GameBlock gb : engine.getLevel()){
+			r = gb.r;
 			// Figure is out of bounds (to the right), haven't reached that part, done drawing
 			if (r.left > viewPortX + screenWidth - 1){
 				break;

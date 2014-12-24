@@ -33,7 +33,10 @@
         android:scrollbars="vertical"
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:fadeScrollbars="false"
-        android:layout_margin="8dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:padding="4dp" >
 
         <LinearLayout
@@ -52,5 +55,16 @@
         </LinearLayout>
         
     </ScrollView>
+    
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="8dp"
+        android:text="@string/version_string"
+        android:textColor="#000"
+        android:textSize="20sp" />
 
 </RelativeLayout>

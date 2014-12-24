@@ -20,6 +20,8 @@ public class AboutActivity extends Activity{
 		font = Typeface.createFromAsset(getAssets(), "fonts/disposable_droid.ttf");
 		setTitleFont();
 		customizeBackground();
+		TextView tv = (TextView)findViewById(R.id.version);
+		tv.setTypeface(font);
 	}
 	
 	void setTitleFont(){

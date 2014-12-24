@@ -1,20 +1,27 @@
 package com.nk.bloxmania;
 
-import com.example.collisiontest.R;
-
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.example.collisiontest.R;
 
 public class MainActivity extends Activity{
-	
+	public static final int BASE_BUTTON_SIZE = 72;
+	public static final int FONT_SIZE = BASE_BUTTON_SIZE / 2;
+	Typeface font;
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.menu_layout);
-		setButtonListeners();
+		font = Typeface.createFromAsset(getAssets(), "fonts/disposable_droid.ttf");
+		setUpInterface();
 		customizeBackground();
 		LevelManager.countLevels(this);
 		LevelManager.countBackgrounds(this);
@@ -32,8 +39,14 @@ public class MainActivity extends Activity{
 		sbv.setScrollSpeedY(0.5f);
 	}
 	
-	void setButtonListeners(){
-		findViewById(R.id.button_play).setOnTouchListener(new View.OnTouchListener() {
+	void setUpInterface(){
+		TextView tv = (TextView)findViewById(R.id.version);
+		tv.setTypeface(font);
+		
+		Button b1 = (Button)findViewById(R.id.button_play);
+		b1.setTypeface(font);
+		b1.setTextSize(FONT_SIZE);
+		b1.setOnTouchListener(new View.OnTouchListener() {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -43,7 +56,10 @@ public class MainActivity extends Activity{
 			}
 		});
 		
-		findViewById(R.id.button_options).setOnTouchListener(new View.OnTouchListener() {
+		Button b2 = (Button)findViewById(R.id.button_options);
+		b2.setTypeface(font);
+		b2.setTextSize(FONT_SIZE);
+		b2.setOnTouchListener(new View.OnTouchListener() {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -52,7 +68,10 @@ public class MainActivity extends Activity{
 			}
 		});
 		
-		findViewById(R.id.button_about).setOnTouchListener(new View.OnTouchListener() {
+		Button b3 = (Button)findViewById(R.id.button_about);
+		b3.setTypeface(font);
+		b3.setTextSize(FONT_SIZE);
+		b3.setOnTouchListener(new View.OnTouchListener() {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {

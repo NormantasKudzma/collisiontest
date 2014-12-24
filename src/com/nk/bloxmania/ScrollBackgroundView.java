@@ -28,7 +28,8 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 	
 	protected boolean done = false;
 	protected volatile boolean paused = false;
-	protected long sleepInterval = 33;
+	protected long sleepInterval = 40;
+	protected long trivialInterval = 10;
 	
 	public ScrollBackgroundView(Context c, AttributeSet attrs){
 		super(c, attrs);
@@ -90,19 +91,6 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 			bgPivotY = 0;
 		}
 	}
-
-	/*protected void drawBackground(){
-		bgRect.set(bgPivotX - screenWidth, 0, bgPivotX, screenHeight);
-		mainCanvas.drawBitmap(bgImg, null, bgRect, paint);
-		if (bgPivotX < screenWidth){
-			mainCanvas.drawBitmap(bgImg, bgPivotX, 0, paint);
-		}
-		
-		bgPivotX -= bgPivotXDelta;
-		if (bgPivotX <= 0){
-			bgPivotX = screenWidth;
-		}
-	}*/
 	
 	public void setScrollSpeedX(float value){
 		bgPivotXDelta = value;
@@ -118,5 +106,9 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 	
 	protected void clearCanvas(){
 		mainCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+	}
+	
+	protected void destroyImages(){
+		bgImg.recycle();
 	}
 }
