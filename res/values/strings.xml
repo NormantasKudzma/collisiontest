@@ -4,7 +4,10 @@
     <string name="app_name">collisiontest</string>
     <string name="action_settings">Settings</string>
     <string name="empty_string"></string>
-    <string name="about_title">About [GAMETITLE]</string>    
-    <string name="level_title">Level selection</string>    
+    <string name="about_title">About BloxMania</string>    
+    <string name="level_title">Level selection</string>
+    <string name="button_play">Play</string>
+    <string name="button_options">Options</string>
+    <string name="button_about">About</string>   
 
 </resources>

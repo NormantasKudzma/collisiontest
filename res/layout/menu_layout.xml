@@ -2,9 +2,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg6" >
+    android:layout_height="match_parent" >
 
+    <com.nk.bloxmania.ScrollBackgroundView
+        android:id="@+id/menu_scroll_background"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:contentDescription="@string/empty_string"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_launcher"
+    	android:background="@drawable/bg5"/>
+        
+    <ImageView
+       	android:id="@+id/menu_title_image"
+       	android:src="@drawable/titleimg"
+       	android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_centerHorizontal="true"
+       	android:layout_marginTop="16dp"
+       	android:contentDescription="@string/empty_string"/>
+    
     <Button
         android:id="@+id/button_options"
         android:layout_width="wrap_content"
@@ -12,24 +29,28 @@
         android:layout_alignBaseline="@+id/button_play"
         android:layout_alignBottom="@+id/button_play"
         android:layout_centerHorizontal="true"
-        android:text="Options" />
-
+        android:background="@drawable/button"
+        android:text="@string/button_options" />
+    
     <Button
         android:id="@+id/button_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@id/button_options"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/menu_title_image"
         android:layout_marginRight="160dp"
-        android:text="Play" />
-    
+        android:background="@drawable/button"
+        android:text="@string/button_play" />
+
     <Button
         android:id="@+id/button_about"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/button_options"
         android:layout_marginLeft="160dp"
-        android:layout_marginTop="160dp"
-        android:text="About" />
+		android:layout_alignBaseline="@+id/button_play"
+        android:layout_alignLeft="@id/button_options"
+        android:background="@drawable/button"
+        android:text="@string/button_about" />
 
 </RelativeLayout>

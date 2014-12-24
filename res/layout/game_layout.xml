@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     tools:context=".MainActivity" >
 
-    <com.nk.collisiontest.GameView
+    <com.nk.bloxmania.GameView
         android:id="@+id/imageView1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
