@@ -1,8 +1,5 @@
 package com.nk.bloxmania;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -13,50 +10,38 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class LevelSelectionActivity extends Activity{
-	public static final int BASE_BUTTON_SIZE = 72;
-	public static final int FONT_SIZE = BASE_BUTTON_SIZE / 2;
+public class LevelSelectionActivity extends CustomActivity{
 	public static final int ROW_SIZE = 8;
-	
-	private Typeface font;
-	ScrollBackgroundView sbv;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.level_select_layout);
-		font = Typeface.createFromAsset(getAssets(), "fonts/disposable_droid.ttf");
 		setTitleFont();
 		setButtonListeners();
-		customizeBackground();
-	}
-	
-	void customizeBackground(){
-		sbv = (ScrollBackgroundView)findViewById(R.id.level_select_scroll_background);
-		sbv.setScrollSpeedX(0);
-		sbv.setScrollSpeedY(0.7f);
+		scrollBackgroundResource = R.id.level_select_scroll_background;
+		customizeBackground(0, 0.7f);
 	}
 	
 	void setTitleFont(){
 		TextView tv = (TextView) findViewById(R.id.level_label);
-		tv.setTextSize(FONT_SIZE * 2);
+		tv.setTextSize(BIG_SIZE);
 		tv.setTypeface(font);
 	}
 	
 	void setButtonListeners(){
-		int w = BASE_BUTTON_SIZE, 
-			h = BASE_BUTTON_SIZE;
+		int w = BIG_SIZE, 
+			h = BIG_SIZE;
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
 		float scale = metrics.density;
-		w *= scale;
-		h *= scale;
+		w = h *= scale;
 		TableLayout tl = (TableLayout)findViewById(R.id.level_table);
 		TableRow tr = createTableRow();
         int nr = 0;
         
         for (int i = 0; /*doop dee doop*/; i++){
         	final Button button = new Button(this);
-        	button.setTextSize(FONT_SIZE);
+        	button.setTextSize(SMALL_SIZE);
     		button.setBackgroundResource(R.drawable.button);
         	final int lvl = nr;
         	if (lvl >= LevelManager.LEVELS_UNLOCKED){
@@ -71,10 +56,8 @@ public class LevelSelectionActivity extends Activity{
 				@Override
 				public void onClick(View v) {
 					GameView.selectedLevel = lvl;
-					Intent i = new Intent(LevelSelectionActivity.this, GameActivity.class);
-					startActivity(i);
+					startCustomActivity(GameActivity.class);
 				}
-            	
             });
 
     		button.setTypeface(font);
@@ -108,15 +91,9 @@ public class LevelSelectionActivity extends Activity{
 		tr.setGravity(Gravity.CENTER_HORIZONTAL);
 		return tr;
 	}
-	
-	@Override
-	public void onBackPressed() {
-		finish();
-	}
 
 	@Override
-	public void finish() {
-		sbv.isDone(true);
-		super.finish();
+	public void onBackPressed() {
+		startCustomActivity(MainActivity.class);
 	}
 }

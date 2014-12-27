@@ -25,7 +25,10 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 	protected float bgPivotY;					// Current position of pivot for background image
 	protected float bgPivotXDelta = 2;			// Position change per frame for background image (horizontal)
 	protected float bgPivotYDelta = 1;			// Position change per frame for background image (vertical)
-	protected RectF bgRect = new RectF();
+	protected RectF leftTop = new RectF();
+	protected RectF leftBottom = new RectF();
+	protected RectF rightTop = new RectF();
+	protected RectF rightBottom = new RectF();
 	
 	protected boolean done = false;
 	protected volatile boolean paused = false;
@@ -71,15 +74,16 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
-		canvas.drawBitmap(bitmap, 0, 0, paint);
+		canvas.drawBitmap(bitmap, 0, 0, paint);		
 	}
 	
 	protected void drawBackground(){
-		bgRect.set(bgPivotX - screenWidth, bgPivotY - screenHeight, bgPivotX, bgPivotY);
-		RectF leftBottom = new RectF(bgRect.left, bgRect.bottom, bgRect.right, bgRect.bottom + bgRect.height());
-		RectF rightTop = new RectF(bgRect.right, bgRect.top, bgRect.right + bgRect.width(), bgRect.bottom);
-		RectF rightBottom = new RectF(bgRect.right, bgRect.bottom, rightTop.right, leftBottom.bottom);
-		mainCanvas.drawBitmap(bgImg, null, bgRect, paint);
+		leftTop.set(bgPivotX - screenWidth, bgPivotY - screenHeight, bgPivotX, bgPivotY);
+		leftBottom.set(leftTop.left, leftTop.bottom, leftTop.right, leftTop.bottom + leftTop.height());
+		rightTop.set(leftTop.right, leftTop.top, leftTop.right + leftTop.width(), leftTop.bottom);
+		rightBottom.set(leftTop.right, leftTop.bottom, rightTop.right, leftBottom.bottom);
+		
+		mainCanvas.drawBitmap(bgImg, null, leftTop, paint);
 		mainCanvas.drawBitmap(bgImg, null, leftBottom, paint);
 		mainCanvas.drawBitmap(bgImg, null, rightTop, paint);
 		mainCanvas.drawBitmap(bgImg, null, rightBottom, paint);
@@ -111,6 +115,6 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 	}
 	
 	public void finish(){
-		((Activity)getContext()).finish();
+		isDone(true);
 	}
 }

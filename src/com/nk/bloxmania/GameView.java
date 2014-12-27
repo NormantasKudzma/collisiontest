@@ -51,7 +51,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		super(c, attrs);
 		mSensorManager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
 		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		mSensorManager.registerListener(this, mSensor, 50000);		
+		mSensorManager.registerListener(this, mSensor, 50000);
 		setScrollSpeedY(0);
 		
 		new Thread(this).start();
@@ -121,9 +121,6 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 			
 			while (!done){
 				// Move player, check collisions, draw everything
-				while (paused){
-					wait();
-				}
 				t0 = System.currentTimeMillis();
 				performDraws();
 				engine.movePlayerVertical();
@@ -140,6 +137,8 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 					Thread.sleep(trivialInterval);
 				}
 			}
+			unregisterMotionListener();
+			LevelManager.updateDeaths(selectedLevel, GameEngine.DEATH_COUNT);
 			setUpButtonListeners();
 			if (levelCompleted){
 				showCenteredText("Level completed!");
@@ -170,37 +169,35 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		        	case MotionEvent.ACTION_DOWN: { 
 		        		for (GameButton i : buttons){
 		        			if (i.r.contains(x, y)){
+		        				unregisterTouchListener();
 		        				if (i.text.equals("Back to menu")){
 		        					// Add up deaths, show main menu
-		        					LevelManager.updateDeaths(selectedLevel, GameEngine.DEATH_COUNT);
-		        					LevelManager.saveSettings();
 		        					GameEngine.DEATH_COUNT = 0;
 		        					if (levelCompleted && selectedLevel + 1 == LevelManager.LEVELS_UNLOCKED){
 			        					LevelManager.LEVELS_UNLOCKED++;
-		        					}
-		        					finish();
+		        					}	        					
 		        					Intent intent = new Intent(getContext(), MainActivity.class);
 		        		            ((Activity)getContext()).startActivity(intent);
+		        		            finish();
 		        					return true;
 		        				}
 		        				if (levelCompleted){
 		        					// Add up deaths, start next level
-		        					LevelManager.updateDeaths(selectedLevel, GameEngine.DEATH_COUNT);
 		        					GameEngine.DEATH_COUNT = 0;
 		        					if (selectedLevel + 1 == LevelManager.LEVELS_UNLOCKED){
 			        					LevelManager.LEVELS_UNLOCKED++;
 		        					}
 		        					selectedLevel++;
-		        					finish();
 		        					Activity host = (Activity) getContext();
 		        					host.recreate();
+		        					finish();
 		        					return true;
 		        				}
 		        				else {
 		        					// Increment deaths, restart level
-		        					LevelManager.updateDeaths(selectedLevel, GameEngine.DEATH_COUNT);
 		        					Activity host = (Activity) getContext();
 		        					host.recreate();
+		        					finish();
 		        					return true;
 		        				}
 		        			}
@@ -277,6 +274,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		int viewPortX = engine.getViewPortX();
 		ArrayList<GameBlock> level = engine.getLevel();
 		Rect r;
+		Rect rr = new Rect();
 		for (GameBlock gb : engine.getLevel()){
 			r = gb.r;
 			// Figure is out of bounds (to the right), haven't reached that part, done drawing
@@ -288,9 +286,9 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 				continue;
 			}
 			
-			Rect rr = new Rect();
-			rr.top = r.top;
-			rr.bottom = r.bottom;
+			rr.set(0, r.top, 0, r.bottom);
+//			rr.top = r.top;
+//			rr.bottom = r.bottom;
 			if (r.left >= viewPortX){
 				rr.left = r.left - viewPortX;
 			}
@@ -316,7 +314,30 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 			done = true;
 		}
 	}
-
+	
+	@Override
+	public void finish() {
+		unregisterTouchListener();
+		super.finish();
+	}
+	
+	protected void unregisterTouchListener(){
+		setOnTouchListener(null);
+	}
+	
+	protected void unregisterMotionListener(){
+		if (mSensorManager != null && mSensor != null){
+			mSensorManager.unregisterListener(this, mSensor);
+		}
+		else {
+			if (mSensorManager != null){
+				mSensorManager.unregisterListener(this);
+			}
+		}
+		mSensorManager = null;
+		mSensor = null;
+	}
+	
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 	
