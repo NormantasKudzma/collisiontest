@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="menu_tag">5</integer>
+    <integer name="about_tag">3</integer>
+    <integer name="level_select_tag">4</integer>
+    <integer name="options_tag">7</integer>
+</resources>

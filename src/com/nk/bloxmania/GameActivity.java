@@ -1,10 +1,8 @@
 package com.nk.bloxmania;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
-public class GameActivity extends Activity {
+public class GameActivity extends CustomActivity {
 	GameView gv;
 
 	@Override
@@ -18,9 +16,7 @@ public class GameActivity extends Activity {
 	public void onBackPressed() {
 		saveSettings();
 		killThread();
-		Intent i = new Intent(this, LevelSelectionActivity.class);
-		startActivity(i);
-		finish();
+		startCustomActivity(LevelSelectionActivity.class);
 	}
 	
 	@Override
@@ -33,11 +29,6 @@ public class GameActivity extends Activity {
 	protected void onResume() {
 		gv.paused = false;
 		super.onResume();
-	}
-	
-	void saveSettings(){
-		LevelManager.updateDeaths(GameView.selectedLevel, GameEngine.DEATH_COUNT);
-		GameEngine.DEATH_COUNT = 0;
 	}
 	
 	@Override

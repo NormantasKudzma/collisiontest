@@ -1,15 +1,11 @@
 package com.nk.bloxmania;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends CustomActivity{	
-	protected MusicManager musicManager = null;
-	protected MusicServiceConnection msc;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -20,27 +16,6 @@ public class MainActivity extends CustomActivity{
 		customizeBackground(0.5f, 0.5f);
 		LevelManager.countLevels(this);
 		LevelManager.countBackgrounds(this);
-		
-		Intent i = new Intent(this, MusicManager.class);
-		if (startService(i) != null){
-			if (msc == null){
-				msc = new MusicServiceConnection();
-				bindService(i, msc, Context.BIND_AUTO_CREATE);
-				musicManager = msc.getService();
-			}
-		}
-	}
-	
-	@Override
-	protected void onDestroy() {
-		if (msc != null){
-			unbindService(msc);
-		}
-		if (musicManager != null){
-			musicManager.pause();
-			musicManager = null;
-		}
-		super.onDestroy();
 	}
 	
 	void setUpInterface(){

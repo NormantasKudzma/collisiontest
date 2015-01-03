@@ -1,7 +1,11 @@
 package com.nk.bloxmania;
 
+import java.io.InputStream;
+
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -46,9 +50,30 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 	}
 
 	protected void initialize(){
-		bgImg = ((BitmapDrawable)getBackground()).getBitmap();
-		bgImg = Bitmap.createScaledBitmap(bgImg, screenWidth, screenHeight, false);
+		int i = Integer.parseInt((String) getTag());
+		loadBackground(i);
 		new Thread(this).start();
+	}
+	
+	protected void loadBackground(int i){
+		Resources res = getResources();
+		int resId;
+		
+		resId = res.getIdentifier("bg" + i, "drawable", getContext().getPackageName());
+	
+		if (resId != 0){
+			try {
+				InputStream is = res.openRawResource(resId);
+		        bgImg = BitmapFactory.decodeStream(is);
+		        bgImg = Bitmap.createScaledBitmap(bgImg, screenWidth, screenHeight, false);
+		        setBackground(new BitmapDrawable(res, bgImg));
+			} 
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Log.w("nk", "Loaded background resource, id: " + resId);
 	}
 	
 	@Override

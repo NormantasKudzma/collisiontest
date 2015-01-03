@@ -3,40 +3,28 @@ package com.nk.bloxmania;
 import java.util.ArrayList;
 import java.util.Random;
 
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
-import android.os.Binder;
-import android.os.IBinder;
 import android.util.Log;
 
-public class MusicManager extends Service{
+public class MusicManager{
 	private final String FILE_PREFIX = "audio";
 	private final String FILE_SUFFIX = "";
-	
-	private final IBinder mBinder = new ServiceBinder();
 	
 	private float volume = 0.5f;
 	ArrayList<Integer> files;
 	private int nr = 0;
 	private boolean autoplay = true;	
 	private MediaPlayer mp;
+	private Context c;
 	
-	public class ServiceBinder extends Binder {
-		public MusicManager getService() {
-			return MusicManager.this;
-		}
-	}
-	
-	@Override
-	public void onCreate() {
-		super.onCreate();
+	public MusicManager(Context c) {
+		this.c = c;
 		mp = new MediaPlayer();
 		mp.setVolume(volume, volume);
-		loadAudioFiles();
+		loadAudioFiles(c);
 		shufflePlaylist();	
 		mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {			
 			@Override
@@ -74,8 +62,7 @@ public class MusicManager extends Service{
 		}
 	}
 	
-	private void loadAudioFiles(){
-		Context c = getApplicationContext();
+	private void loadAudioFiles(Context c){
 		Resources res = c.getResources();
 		files = new ArrayList<Integer>();
 		int i = 0;
@@ -128,7 +115,7 @@ public class MusicManager extends Service{
 	}
 	
 	public void play(int i){
-		AssetFileDescriptor afd = getApplicationContext().getResources().openRawResourceFd(files.get(i));
+		AssetFileDescriptor afd = c.getResources().openRawResourceFd(files.get(i));
 		
 		try {
 			mp.reset();
@@ -141,20 +128,14 @@ public class MusicManager extends Service{
 		}		
 	}
 	
-	@Override
-	public void onDestroy() {
+	public void finish(){
 		Log.w("nk", "MusicManager stopped.");
 		if (mp != null){
 			mp.stop();
 			mp.release();
 			mp = null;
 		}
+		c = null;
 		files = null;
-		super.onDestroy();
-	}
-
-	@Override
-	public IBinder onBind(Intent i) {
-		return mBinder;
 	}
 }

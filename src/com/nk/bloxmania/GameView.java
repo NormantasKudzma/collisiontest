@@ -1,14 +1,10 @@
 package com.nk.bloxmania;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -60,25 +56,13 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 	
 	@Override
 	protected void initialize() {
-		Resources res = getResources();
-		int resId;
 		// tutorial level has tutorial background, else normal bg
 		if (selectedLevel == 0){
-			resId = res.getIdentifier("bg" + selectedLevel, "drawable", getContext().getPackageName());
+			loadBackground(selectedLevel);
 		}
 		else {
-			resId = res.getIdentifier("bg" + ((selectedLevel % (LevelManager.NUM_BACKGROUNDS - 1)) + 1), "drawable", getContext().getPackageName());
+			loadBackground(((selectedLevel % (LevelManager.NUM_BACKGROUNDS - 1)) + 1));
 		}
-		setBackgroundResource(resId);
-		try {
-			InputStream is = res.openRawResource(resId);
-	        bgImg = BitmapFactory.decodeStream(is);
-	        bgImg = Bitmap.createScaledBitmap(bgImg, screenWidth, screenHeight, false);
-		} 
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		Log.w("nk", "Loaded background resource, id: " + resId);
 		
 		deathCounterX = screenWidth * 3 / 18;
 		deathCounterY = screenHeight * 1 / 9;

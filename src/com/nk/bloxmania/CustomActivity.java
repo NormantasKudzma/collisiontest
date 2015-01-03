@@ -1,7 +1,6 @@
 package com.nk.bloxmania;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -9,6 +8,8 @@ import android.os.Bundle;
 public class CustomActivity extends Activity{
 	public static final int BIG_SIZE = 72;
 	public static final int SMALL_SIZE = BIG_SIZE / 2;
+
+	protected static MusicManager musicManager = null;
 	
 	protected Typeface font;
 	protected ScrollBackgroundView sbv;
@@ -18,6 +19,10 @@ public class CustomActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		font = Typeface.createFromAsset(getAssets(), "fonts/disposable_droid.ttf");
+		
+		if (CustomActivity.musicManager == null){
+			CustomActivity.musicManager = new MusicManager(getApplicationContext());
+		}
 	}
 	
 	protected void customizeBackground(float dx, float dy){
@@ -33,16 +38,28 @@ public class CustomActivity extends Activity{
 	
 	@Override
 	protected void onPause() {
+		CustomActivity.musicManager.pause();
 		super.onPause();
 	}
 	
 	@Override
 	protected void onResume() {
+		CustomActivity.musicManager.resume();
 		super.onResume();
 	}
 	
 	@Override
+	protected void onStart() {
+		CustomActivity.musicManager.resume();
+		super.onStart();
+	}
+	
+	@Override
 	protected void onDestroy() {
+//		if (CustomActivity.musicManager != null){
+//			CustomActivity.musicManager.finish();
+//			CustomActivity.musicManager = null;
+//		}
 		saveSettings();
 		finish();
 		super.onDestroy();

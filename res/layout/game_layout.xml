@@ -13,7 +13,6 @@
         android:layout_height="fill_parent"
         android:contentDescription="@string/empty_string"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_launcher" 
         android:background="@drawable/bg1"/>
 
 </LinearLayout>
