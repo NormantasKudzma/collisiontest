@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -72,6 +73,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		try {
 			InputStream is = res.openRawResource(resId);
 	        bgImg = BitmapFactory.decodeStream(is);
+	        bgImg = Bitmap.createScaledBitmap(bgImg, screenWidth, screenHeight, false);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();

@@ -1,13 +1,11 @@
 package com.nk.bloxmania;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
-import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -25,10 +23,6 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 	protected float bgPivotY;					// Current position of pivot for background image
 	protected float bgPivotXDelta = 2;			// Position change per frame for background image (horizontal)
 	protected float bgPivotYDelta = 1;			// Position change per frame for background image (vertical)
-	protected RectF leftTop = new RectF();
-	protected RectF leftBottom = new RectF();
-	protected RectF rightTop = new RectF();
-	protected RectF rightBottom = new RectF();
 	
 	protected boolean done = false;
 	protected volatile boolean paused = false;
@@ -53,6 +47,7 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 
 	protected void initialize(){
 		bgImg = ((BitmapDrawable)getBackground()).getBitmap();
+		bgImg = Bitmap.createScaledBitmap(bgImg, screenWidth, screenHeight, false);
 		new Thread(this).start();
 	}
 	
@@ -77,21 +72,22 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 		canvas.drawBitmap(bitmap, 0, 0, paint);		
 	}
 	
-	protected void drawBackground(){
-		leftTop.set(bgPivotX - screenWidth, bgPivotY - screenHeight, bgPivotX, bgPivotY);
-		leftBottom.set(leftTop.left, leftTop.bottom, leftTop.right, leftTop.bottom + leftTop.height());
-		rightTop.set(leftTop.right, leftTop.top, leftTop.right + leftTop.width(), leftTop.bottom);
-		rightBottom.set(leftTop.right, leftTop.bottom, rightTop.right, leftBottom.bottom);
+	protected void drawBackground(){	
+		mainCanvas.save();
+		mainCanvas.translate(-bgPivotX, bgPivotY);
+		mainCanvas.drawBitmap(bgImg, 0,  0, null);
+		mainCanvas.translate(0, -screenHeight);
+		mainCanvas.drawBitmap(bgImg, 0, 0, null);
+		mainCanvas.translate(screenWidth, 0);
+		mainCanvas.drawBitmap(bgImg, 0, 0, null);
+		mainCanvas.translate(0, screenHeight);
+		mainCanvas.drawBitmap(bgImg, 0, 0, null);
+		mainCanvas.restore();
 		
-		mainCanvas.drawBitmap(bgImg, null, leftTop, paint);
-		mainCanvas.drawBitmap(bgImg, null, leftBottom, paint);
-		mainCanvas.drawBitmap(bgImg, null, rightTop, paint);
-		mainCanvas.drawBitmap(bgImg, null, rightBottom, paint);
-		
-		bgPivotX -= bgPivotXDelta;
+		bgPivotX += bgPivotXDelta;
 		bgPivotY += bgPivotYDelta;
-		if (bgPivotX <= 0){
-			bgPivotX = screenWidth;
+		if (bgPivotX >= screenWidth){
+			bgPivotX = 0;
 		}
 		if (bgPivotY >= screenHeight){
 			bgPivotY = 0;

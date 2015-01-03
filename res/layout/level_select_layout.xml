@@ -9,7 +9,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:contentDescription="@string/empty_string"
-        android:scaleType="fitXY"
+        android:scaleX="1"
+        android:scaleY="1"
         android:src="@drawable/ic_launcher"
     	android:background="@drawable/bg4"/>
     

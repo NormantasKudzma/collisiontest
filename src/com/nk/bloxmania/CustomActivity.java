@@ -1,6 +1,7 @@
 package com.nk.bloxmania;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -11,7 +12,6 @@ public class CustomActivity extends Activity{
 	
 	protected Typeface font;
 	protected ScrollBackgroundView sbv;
-	
 	protected int scrollBackgroundResource = -1;
 	
 	@Override
@@ -24,6 +24,21 @@ public class CustomActivity extends Activity{
 		sbv = (ScrollBackgroundView)findViewById(scrollBackgroundResource);
 		sbv.setScrollSpeedX(dx);
 		sbv.setScrollSpeedY(dy);
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
 	}
 	
 	@Override
@@ -55,6 +70,5 @@ public class CustomActivity extends Activity{
 	@Override
 	public void onBackPressed() {
 		finish();
-		super.onBackPressed();
 	}
 }
