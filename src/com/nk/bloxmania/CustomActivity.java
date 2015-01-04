@@ -30,12 +30,7 @@ public class CustomActivity extends Activity{
 		sbv.setScrollSpeedX(dx);
 		sbv.setScrollSpeedY(dy);
 	}
-	
-	@Override
-	protected void onStop() {
-		super.onStop();
-	}
-	
+		
 	@Override
 	protected void onPause() {
 		CustomActivity.musicManager.pause();
@@ -56,12 +51,7 @@ public class CustomActivity extends Activity{
 	
 	@Override
 	protected void onDestroy() {
-//		if (CustomActivity.musicManager != null){
-//			CustomActivity.musicManager.finish();
-//			CustomActivity.musicManager = null;
-//		}
 		saveSettings();
-		finish();
 		super.onDestroy();
 	}
 	

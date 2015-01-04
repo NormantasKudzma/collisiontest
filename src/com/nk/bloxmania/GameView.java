@@ -2,9 +2,7 @@ package com.nk.bloxmania;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -161,10 +159,10 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		        					GameEngine.DEATH_COUNT = 0;
 		        					if (levelCompleted && selectedLevel + 1 == LevelManager.LEVELS_UNLOCKED){
 			        					LevelManager.LEVELS_UNLOCKED++;
-		        					}	        					
-		        					Intent intent = new Intent(getContext(), MainActivity.class);
-		        		            ((Activity)getContext()).startActivity(intent);
-		        		            finish();
+		        					}
+		        					finish();
+		        					CustomActivity host = (CustomActivity)getContext();
+		        					host.startCustomActivity(MainActivity.class);
 		        					return true;
 		        				}
 		        				if (levelCompleted){
@@ -174,16 +172,12 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 			        					LevelManager.LEVELS_UNLOCKED++;
 		        					}
 		        					selectedLevel++;
-		        					Activity host = (Activity) getContext();
-		        					host.recreate();
-		        					finish();
+		        					recreate();
 		        					return true;
 		        				}
 		        				else {
 		        					// Increment deaths, restart level
-		        					Activity host = (Activity) getContext();
-		        					host.recreate();
-		        					finish();
+		        					recreate();
 		        					return true;
 		        				}
 		        			}
@@ -330,5 +324,11 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		screenRotation = event.values[1];
+	}
+
+	public void recreate(){
+		finish();
+		CustomActivity host = (CustomActivity)getContext();
+		host.startCustomActivity(GameActivity.class);
 	}
 }

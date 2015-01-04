@@ -29,7 +29,7 @@ public class OptionsActivity extends MainActivity{
 	}
 
 	protected void initListeners(){
-		SeekBar volume = (SeekBar)findViewById(R.id.master_volume);
+		SeekBar volume = (SeekBar)findViewById(R.id.volume_slider);
 		volume.setMax(MAX_VOL);
 		volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			
@@ -43,10 +43,11 @@ public class OptionsActivity extends MainActivity{
 			
 			@Override
 			public void onProgressChanged(SeekBar s, int val, boolean user) {
-				CustomActivity.musicManager.setVolume(1.0f * val / MAX_VOL);
-				updateValue("volume", val + "");
+				float vol = 1.0f * val / MAX_VOL;
+				CustomActivity.musicManager.setVolume(vol);
+				updateValue("volume", vol + "");
 			}
 		});
-		volume.setProgress((int)CustomActivity.musicManager.getVolume());
+		volume.setProgress((int)(CustomActivity.musicManager.getVolume() * MAX_VOL));
 	}
 }

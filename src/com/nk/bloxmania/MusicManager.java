@@ -100,7 +100,9 @@ public class MusicManager{
 	}
 	
 	public void pause(){
-		mp.pause();
+		if (mp.isPlaying()){
+			mp.pause();
+		}
 	}
 	
 	public void resume(){

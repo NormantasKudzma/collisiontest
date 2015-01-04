@@ -99,7 +99,7 @@ public class MainActivity extends CustomActivity{
 				String end = line.substring(line.indexOf('=') + 1);
 				try {
 					SetVar.valueOf(st).set(end);
-					settings.add(line);
+					updateValue(st, end);
 				}
 				catch (Exception e){}
 			}
@@ -112,6 +112,9 @@ public class MainActivity extends CustomActivity{
 	
 	@Override
 	protected void saveSettings() {
+		if (settings.isEmpty()){
+			loadSettings();
+		}
 		try {
 			PrintWriter pw = new PrintWriter(new File(DEF_PATH + FILE_NAME));
 			for (String i : settings){
