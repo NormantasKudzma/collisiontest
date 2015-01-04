@@ -29,7 +29,7 @@
         android:layout_alignBottom="@+id/button_play"
         android:layout_centerHorizontal="true"
         android:background="@drawable/button"
-        android:text="@string/button_options" />
+        android:text="@string/options_string" />
     
     <Button
         android:id="@+id/button_play"

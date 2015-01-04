@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg7">
+
+    <TextView
+        android:id="@+id/options_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp"
+        android:textSize="32sp"
+        android:textColor="#000"
+        android:text="@string/options_string" />
+    
+    <TableLayout
+        android:id="@+id/options_table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/options_title"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp"
+        android:stretchColumns="1" >
+        <TableRow
+            android:id="@+id/options_table_row1">
+            <TextView 
+                android:id="@+id/master_volume"
+                android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:textSize="16sp"
+        		android:textColor="#000"
+        		android:text="@string/volume_string"
+        		android:layout_margin="8dp"/>
+            <SeekBar 
+                android:id="@+id/volume_slider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"/>
+        </TableRow>
+    </TableLayout>
+
+</RelativeLayout>

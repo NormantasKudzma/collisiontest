@@ -43,6 +43,11 @@
             android:launchMode="singleInstance"
             android:screenOrientation="landscape">
         </activity>
+        <activity 
+            android:name="com.nk.bloxmania.OptionsActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="landscape">
+        </activity>
         
         <service 
             android:name="com.nk.bloxmania.MusicManager"
