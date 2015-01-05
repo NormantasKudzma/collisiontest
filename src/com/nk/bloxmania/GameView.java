@@ -48,7 +48,9 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mSensorManager.registerListener(this, mSensor, 50000);
 		setScrollSpeedY(0);
-		
+		((CustomActivity)getContext()).getWindow().setBackgroundDrawable(null);
+		setBackgroundResource(0);
+		setWillNotDraw(false);
 		new Thread(this).start();
 	}
 	
@@ -94,15 +96,16 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 			loadLevel();
 			
 			// Countdown
-			clearCanvas();
+			drawBackground();
 			showCenteredText("Get ready..");
-			postInvalidate();
+			postInvalidate();	
 			Thread.sleep(longSleepInterval);
-			clearCanvas();
+			
+			drawBackground();
 			showCenteredText("GO!");
 			postInvalidate();
 			Thread.sleep(longSleepInterval);
-			
+
 			while (!done){
 				// Move player, check collisions, draw everything
 				t0 = System.currentTimeMillis();
@@ -114,12 +117,11 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 				postInvalidate();
 				t1 = System.currentTimeMillis();
 				delta = t0 + sleepInterval - t1;
-				if (delta > 0){
-					Thread.sleep(delta);
+				if (delta < trivialInterval){
+					delta = trivialInterval;
 				}
-				else {
-					Thread.sleep(trivialInterval);
-				}
+//				postInvalidateDelayed(delta);
+				Thread.sleep(delta);
 			}
 			unregisterMotionListener();
 			LevelManager.updateDeaths(selectedLevel, GameEngine.DEATH_COUNT);

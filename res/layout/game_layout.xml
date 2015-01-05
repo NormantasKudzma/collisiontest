@@ -11,8 +11,6 @@
         android:id="@+id/imageView1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:contentDescription="@string/empty_string"
-        android:scaleType="fitXY"
-        android:background="@drawable/bg1"/>
+        android:contentDescription="@string/empty_string"/>
 
 </LinearLayout>

@@ -8,11 +8,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Display;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
@@ -36,10 +35,9 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 	public ScrollBackgroundView(Context c, AttributeSet attrs){
 		super(c, attrs);
 		
-		Point sz = new Point();
-		((WindowManager) c.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getSize(sz);
-		screenWidth = sz.x;
-		screenHeight = sz.y;
+		Display d = ((WindowManager) c.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		screenWidth = d.getWidth();
+		screenHeight = d.getHeight();
 		bitmap = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.ARGB_8888);
 		mainCanvas = new Canvas(bitmap);
 		setKeepScreenOn(true);
@@ -55,6 +53,7 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 		new Thread(this).start();
 	}
 	
+	@SuppressWarnings("deprecation")
 	protected void loadBackground(int i){
 		Resources res = getResources();
 		int resId;
@@ -66,7 +65,7 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 				InputStream is = res.openRawResource(resId);
 		        bgImg = BitmapFactory.decodeStream(is);
 		        bgImg = Bitmap.createScaledBitmap(bgImg, screenWidth, screenHeight, false);
-		        setBackground(new BitmapDrawable(res, bgImg));
+		        setBackgroundDrawable(new BitmapDrawable(res, bgImg));
 			} 
 			catch (Exception e) {
 				e.printStackTrace();
@@ -109,6 +108,10 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 		mainCanvas.drawBitmap(bgImg, 0, 0, null);
 		mainCanvas.restore();
 		
+		moveBackground();
+	}
+	
+	protected void moveBackground(){
 		bgPivotX += bgPivotXDelta;
 		bgPivotY += bgPivotYDelta;
 		if (bgPivotX >= screenWidth){
@@ -130,11 +133,7 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 	public synchronized void isDone(boolean done){
 		this.done = done;
 	}
-	
-	protected void clearCanvas(){
-		mainCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
-	}
-	
+		
 	public void finish(){
 		isDone(true);
 	}
