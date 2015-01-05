@@ -3,6 +3,7 @@ package com.nk.bloxmania;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -13,10 +14,12 @@ import android.hardware.SensorManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
 import android.view.View;
 
-public class GameView extends ScrollBackgroundView implements Runnable, SensorEventListener {
+public class GameView extends ScrollBackgroundView implements Runnable, SensorEventListener, SurfaceHolder.Callback {
 	GameEngine engine;
+	SurfaceHolder holder;
 	
 	// Text display variables
 	int newBlack = 0xff000001;
@@ -50,8 +53,12 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		setScrollSpeedY(0);
 		((CustomActivity)getContext()).getWindow().setBackgroundDrawable(null);
 		setBackgroundResource(0);
-		setWillNotDraw(false);
-		new Thread(this).start();
+
+		getHolder().addCallback(this);
+		//		setWillNotDraw(false);
+//		holder = getHolder();
+		
+//		new Thread(this).start();
 	}
 	
 	@Override
@@ -95,15 +102,19 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 			Log.w("GameView", "DRAW THREAD STARTED");
 			loadLevel();
 			
+			lockDrawAndPost();
+			
 			// Countdown
 			drawBackground();
 			showCenteredText("Get ready..");
-			postInvalidate();	
+			lockDrawAndPost();
+//			postInvalidate();	
 			Thread.sleep(longSleepInterval);
 			
 			drawBackground();
 			showCenteredText("GO!");
-			postInvalidate();
+			lockDrawAndPost();
+//			postInvalidate();
 			Thread.sleep(longSleepInterval);
 
 			while (!done){
@@ -114,7 +125,11 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 				engine.movePlayerHorizontal(screenRotation);
 				drawPlayer();
 				showDeathsText();
-				postInvalidate();
+//				postInvalidate();
+				// New implementation of draw
+				lockDrawAndPost();
+				// -- end
+				
 				t1 = System.currentTimeMillis();
 				delta = t0 + sleepInterval - t1;
 				if (delta < trivialInterval){
@@ -135,7 +150,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 				showLeftButton("Restart");
 			}
 			showRightButton("Back to menu");
-			postInvalidate();
+			lockDrawAndPost();
 		}
 		catch (Exception e){
 			e.printStackTrace();
@@ -290,6 +305,17 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		checkLevelEnd(viewPortX, engine.x, level.get(level.size()-1).r.right);
 	}
 	
+	void lockDrawAndPost(){
+		Canvas c = holder.lockCanvas();
+		if (c != null){
+			c.drawBitmap(bitmap, 0, 0, null);	
+			holder.unlockCanvasAndPost(c);
+		}
+		else {
+			Log.wtf("nk", "Could not lock canvas!");
+		}
+	}
+	
 	void checkLevelEnd(int viewPortX, int plrX, int lastBlockX){
 		if (viewPortX + plrX > lastBlockX + 64){
 			levelCompleted = true;
@@ -332,5 +358,27 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		finish();
 		CustomActivity host = (CustomActivity)getContext();
 		host.startCustomActivity(GameActivity.class);
+	}
+
+	S
+	@Override
+	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+	}
+	
+
+	@Override
+	public void surfaceCreated(SurfaceHolder holder) {
+		this.holder = holder;
+		new Thread(this).start();
+	}
+	
+
+	@Override
+	public void surfaceDestroyed(SurfaceHolder holder) {
+		if (holder != null){
+			holder.removeCallback(this);
+		}
+		this.holder = null;
+		finish();
 	}
 }
