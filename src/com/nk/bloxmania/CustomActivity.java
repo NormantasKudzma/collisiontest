@@ -1,14 +1,17 @@
 package com.nk.bloxmania;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 public class CustomActivity extends Activity{
-	public static final int BIG_SIZE = 72;
-	public static final int SMALL_SIZE = BIG_SIZE / 2;
-
+	public static int BIG_SIZE = 72;
+	public static int SMALL_SIZE = BIG_SIZE / 2;
+	protected static float scale = -1;
+	
 	protected static MusicManager musicManager = null;
 	
 	protected Typeface font;
@@ -19,6 +22,13 @@ public class CustomActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		font = Typeface.createFromAsset(getAssets(), "fonts/disposable_droid.ttf");
+		
+		if (scale == -1){
+			int height = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getHeight();
+			scale = Scale.getUniformScale(height);
+			BIG_SIZE = (int)(BIG_SIZE * scale);
+			SMALL_SIZE = BIG_SIZE / 2;
+		}
 		
 		if (CustomActivity.musicManager == null){
 			CustomActivity.musicManager = new MusicManager(getApplicationContext());

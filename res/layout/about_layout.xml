@@ -50,7 +50,8 @@
 		        android:layout_gravity="center_horizontal"
 		        android:textSize="18sp"
         		android:textColor="#000"
-		        android:text="@string/empty_string" />
+		        android:text="@string/empty_string"
+		        android:autoLink="web" />
         </LinearLayout>
         
     </ScrollView>

@@ -76,7 +76,7 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 	}
 	
 	@Override
-	public void run() {
+	public void run(){
 		Log.w("nk", "Scrolling background started.");
 		while (!done && getVisibility() != View.GONE){
 			try {

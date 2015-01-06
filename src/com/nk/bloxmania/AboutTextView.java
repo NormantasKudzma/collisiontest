@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -26,6 +27,7 @@ public class AboutTextView extends TextView{
 				sb.append(line);
 			}
 			setText(Html.fromHtml(sb.toString()));
+			setMovementMethod(LinkMovementMethod.getInstance());
 			br.close();
 		}
 		catch (Exception e){

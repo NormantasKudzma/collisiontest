@@ -55,10 +55,6 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		setBackgroundResource(0);
 
 		getHolder().addCallback(this);
-		//		setWillNotDraw(false);
-//		holder = getHolder();
-		
-//		new Thread(this).start();
 	}
 	
 	@Override
@@ -108,13 +104,11 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 			drawBackground();
 			showCenteredText("Get ready..");
 			lockDrawAndPost();
-//			postInvalidate();	
 			Thread.sleep(longSleepInterval);
 			
 			drawBackground();
 			showCenteredText("GO!");
 			lockDrawAndPost();
-//			postInvalidate();
 			Thread.sleep(longSleepInterval);
 
 			while (!done){
@@ -125,17 +119,13 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 				engine.movePlayerHorizontal(screenRotation);
 				drawPlayer();
 				showDeathsText();
-//				postInvalidate();
-				// New implementation of draw
 				lockDrawAndPost();
-				// -- end
 				
 				t1 = System.currentTimeMillis();
 				delta = t0 + sleepInterval - t1;
 				if (delta < trivialInterval){
 					delta = trivialInterval;
 				}
-//				postInvalidateDelayed(delta);
 				Thread.sleep(delta);
 			}
 			unregisterMotionListener();
@@ -284,8 +274,6 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 			}
 			
 			rr.set(0, r.top, 0, r.bottom);
-//			rr.top = r.top;
-//			rr.bottom = r.bottom;
 			if (r.left >= viewPortX){
 				rr.left = r.left - viewPortX;
 			}
@@ -360,7 +348,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		host.startCustomActivity(GameActivity.class);
 	}
 
-	S
+	
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 	}
