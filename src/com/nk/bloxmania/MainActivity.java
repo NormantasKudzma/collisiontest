@@ -120,7 +120,6 @@ public class MainActivity extends CustomActivity{
 		}
 	}
 	
-	@Override
 	protected void saveSettings() {
 		if (settings.isEmpty()){
 			loadSettings();
@@ -136,7 +135,6 @@ public class MainActivity extends CustomActivity{
 		catch (Exception e){
 			e.printStackTrace();
 		}
-		super.saveSettings();
 	}
 	
 	protected void updateValue(String key, String value){

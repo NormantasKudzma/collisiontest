@@ -58,18 +58,7 @@ public class CustomActivity extends Activity{
 		CustomActivity.musicManager.resume();
 		super.onStart();
 	}
-	
-	@Override
-	protected void onDestroy() {
-		saveSettings();
-		super.onDestroy();
-	}
-	
-	protected void saveSettings(){
-		LevelManager.updateDeaths(GameView.selectedLevel, GameEngine.DEATH_COUNT);
-		GameEngine.DEATH_COUNT = 0;
-	}
-	
+		
 	@Override
 	public void finish() {
 		if (sbv != null){

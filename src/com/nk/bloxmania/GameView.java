@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -80,7 +81,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 	
 	void drawPlayer(){
 		// Draw body
-		paint.setColor(engine.getPlayerColor());
+		paint.setColor(GameEngine.getPlayerColor());
 		Rect r = engine.getPlayerRect();
 		mainCanvas.drawRect(r, paint);
 		// Draw face
@@ -174,7 +175,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		        					}
 		        					finish();
 		        					CustomActivity host = (CustomActivity)getContext();
-		        					host.startCustomActivity(MainActivity.class);
+		        					host.startCustomActivity(LevelSelectionActivity.class);
 		        					return true;
 		        				}
 		        				if (levelCompleted){
@@ -265,8 +266,8 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		paint.setColor(Color.BLACK);
 		int viewPortX = (int)engine.getViewPortX();
 		ArrayList<GameBlock> level = engine.getLevel();
-		Rect r;
-		Rect rr = new Rect();
+		RectF r;
+		RectF rr = new RectF();
 		for (GameBlock gb : engine.getLevel()){
 			r = gb.r;
 			// Figure is out of bounds (to the right), haven't reached that part, done drawing
@@ -295,7 +296,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		}
 		
 		engine.moveViewPort();
-		checkLevelEnd(viewPortX, engine.x, level.get(level.size()-1).r.right);
+		checkLevelEnd(viewPortX, engine.x, (int)level.get(level.size()-1).r.right);
 	}
 	
 	void lockDrawAndPost(){
@@ -352,7 +353,6 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		CustomActivity host = (CustomActivity)getContext();
 		host.startCustomActivity(GameActivity.class);
 	}
-
 	
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {

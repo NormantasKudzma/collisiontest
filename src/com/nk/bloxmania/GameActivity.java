@@ -14,7 +14,6 @@ public class GameActivity extends CustomActivity {
 	
 	@Override
 	public void onBackPressed() {
-		saveSettings();
 		killThread();
 		startCustomActivity(LevelSelectionActivity.class);
 	}
@@ -34,7 +33,13 @@ public class GameActivity extends CustomActivity {
 	@Override
 	protected void onDestroy() {
 		killThread();
+		saveLevelSettings();
 		super.onDestroy();
+	}
+	
+	protected void saveLevelSettings(){
+		LevelManager.updateDeaths(GameView.selectedLevel, GameEngine.DEATH_COUNT);
+		GameEngine.DEATH_COUNT = 0;
 	}
 	
 	void killThread(){

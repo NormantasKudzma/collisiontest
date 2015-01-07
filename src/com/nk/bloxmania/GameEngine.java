@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.Log;
 
 public class GameEngine {
@@ -205,18 +206,18 @@ public class GameEngine {
 			String line;
 			level = new ArrayList<GameBlock>();
 			while ((line = br.readLine()) != null){
-				Rect r = new Rect();
+				RectF r = new RectF();
 				String [] arr = line.split("\t");
-				r.left = (int) (scaleW * Integer.parseInt(arr[0]));
-				r.top = (int) (scaleH * Integer.parseInt(arr[1]));
-				r.right = (int) (scaleW * Integer.parseInt(arr[2]));
-				r.bottom = (int) (scaleH * Integer.parseInt(arr[3]));
+				r.left = scaleW * Integer.parseInt(arr[0]);
+				r.top = scaleH * Integer.parseInt(arr[1]);
+				r.right = scaleW * Integer.parseInt(arr[2]);
+				r.bottom = scaleH * Integer.parseInt(arr[3]);
 				GameBlock gb = new GameBlock(this);
 				gb.setBlockRect(r);
 				if (arr.length > 4){
 					gb.isMoving = true;
-					gb.xDir = (int) (scaleW * Integer.parseInt(arr[4]));
-					gb.yDir = (int) (scaleH * Integer.parseInt(arr[5]));
+					gb.xDir = scaleW * Float.parseFloat(arr[4]);
+					gb.yDir = scaleH * Float.parseFloat(arr[5]);
 				}
 				if (arr.length > 6){
 					// get params, currently only collider
