@@ -27,6 +27,16 @@ public class MainActivity extends CustomActivity{
 				}
 				CustomActivity.musicManager.setVolume(vol);
 			}
+		},
+		plrcolor {
+			@Override
+			void set(String s) {
+				try {
+					int color = Integer.parseInt(s);
+					GameEngine.setPlayerColor(color);
+				}
+				catch (Exception e){}
+			}
 		};
 		abstract void set(String s);
 	}

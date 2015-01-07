@@ -1,6 +1,12 @@
 package com.nk.bloxmania;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -49,5 +55,24 @@ public class OptionsActivity extends MainActivity{
 			}
 		});
 		volume.setProgress((int)(CustomActivity.musicManager.getVolume() * MAX_VOL));
+	
+		RadioGroup rg = (RadioGroup)findViewById(R.id.color_chooser_buttons);
+		rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {		
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				int newColor = Color.MAGENTA;
+				if (checkedId != -1){
+					RadioButton rb = (RadioButton)findViewById(checkedId);
+					ColorDrawable d = (ColorDrawable)rb.getBackground();
+					newColor = d.getColor();
+				}
+				GameEngine.setPlayerColor(newColor);
+				updateValue("plrcolor", newColor + "");
+			}
+		});
+		View bv = rg.findViewWithTag("" + GameEngine.getPlayerColor());
+		if (bv != null){
+			rg.check(bv.getId());
+		}
 	}
 }

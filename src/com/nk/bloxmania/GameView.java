@@ -22,13 +22,13 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 	SurfaceHolder holder;
 	
 	// Text display variables
-	int newBlack = 0xff000001;
-	int newWhite = 0xfffffffe;
-	int deathCounterX;				// Death counter's position
-	int deathCounterY;
-	int bigTextSz = 120;
-	int medTextSz = 60;
-	int smallTextSz = 40;
+	private int newBlack = 0xff000001;
+	private int newWhite = 0xfffffffe;
+	private int deathCounterX;				// Death counter's position
+	private int deathCounterY;
+	private int bigTextSz = 120;
+	private int medTextSz = 60;
+	private int smallTextSz = 40;
 	
 	// Thread management variables
 	long longSleepInterval = 1200;
@@ -69,6 +69,11 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		
 		deathCounterX = screenWidth * 3 / 18;
 		deathCounterY = screenHeight * 1 / 9;
+		
+		// Scaling here
+		bigTextSz = (int) (scaleH * bigTextSz);
+		medTextSz = (int) (scaleH * medTextSz);
+		smallTextSz = (int) (scaleH * smallTextSz);
 		
 		engine = new GameEngine(screenWidth, screenHeight, bitmap, this);
 	}
@@ -258,7 +263,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 	
 	void drawLevel(){
 		paint.setColor(Color.BLACK);
-		int viewPortX = engine.getViewPortX();
+		int viewPortX = (int)engine.getViewPortX();
 		ArrayList<GameBlock> level = engine.getLevel();
 		Rect r;
 		Rect rr = new Rect();

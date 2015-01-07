@@ -17,8 +17,11 @@
        	android:src="@drawable/titleimg"
        	android:layout_width="wrap_content"
        	android:layout_height="wrap_content"
+       	android:scaleX="1.2"
+       	android:scaleY="1.2"
+       	android:scaleType="fitXY"
        	android:layout_centerHorizontal="true"
-       	android:layout_marginTop="16dp"
+       	android:layout_marginTop="24dp"
        	android:contentDescription="@string/empty_string"/>
     
     <Button
@@ -36,8 +39,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="16dp"
-        android:layout_below="@id/menu_title_image"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="64dp"
         android:layout_marginLeft="60dp"
         android:background="@drawable/button"
         android:text="@string/button_play" />

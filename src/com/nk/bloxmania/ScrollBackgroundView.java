@@ -27,6 +27,8 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 	protected float bgPivotXDelta = 2;			// Position change per frame for background image (horizontal)
 	protected float bgPivotYDelta = 1;			// Position change per frame for background image (vertical)
 	
+	protected float scaleW, scaleH;
+	
 	protected boolean done = false;
 	protected volatile boolean paused = false;
 	protected long sleepInterval = 40;
@@ -41,6 +43,9 @@ public class ScrollBackgroundView extends SurfaceView implements Runnable {
 		bitmap = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.ARGB_8888);
 		mainCanvas = new Canvas(bitmap);
 		setKeepScreenOn(true);
+		
+		scaleW = Scale.getWidthScale(screenWidth);
+		scaleH = Scale.getHeightScale(screenHeight);
 		
 		bgPivotX = screenWidth;
 		bgPivotY = 0;

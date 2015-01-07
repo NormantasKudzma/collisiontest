@@ -4,4 +4,12 @@
     <integer name="about_tag">3</integer>
     <integer name="level_select_tag">4</integer>
     <integer name="options_tag">7</integer>
+
+    <integer name="color_red">-65536</integer>
+    <integer name="color_green">-16711936</integer>
+    <integer name="color_blue">-16776961</integer>
+    <integer name="color_magenta">-65281</integer>
+    <integer name="color_yellow">-256</integer>
+    <integer name="color_ltgray">-3355444</integer>
+    <integer name="color_cyan">-16711681</integer>
 </resources>

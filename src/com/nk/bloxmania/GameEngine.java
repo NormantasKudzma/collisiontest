@@ -22,43 +22,55 @@ public class GameEngine {
 	int screenWidth, screenHeight;	// Screen dimensions
 	GameView gameView;
 	
-	static final int horizontalSpeed = 7;				// Determines the maximum you can move per frame (H)
-	static final int verticalSpeed = 40;					// Determines the maximum you can move per frame (V)
-	static final double deltaVerticalDirection = 0.07;	// Shows how many frames the jump up takes
-	static final double gravity = 32;					// Shows how fast you go down
-	double verticalDirection = 0;						// Current jump up frame
-	static final int playerColor = Color.MAGENTA;		// Current player's color
-	int jumpingPoint = -1;
-	boolean isJumping = false;					// Is player moving up?
+	private float scaleW, scaleH;
 	
-	ArrayList<GameBlock> level;					// Array containing level data
-	int currentLevel = 0;						// Current level number
-	int viewPortX = -800;						// Current minimum X position to be drawn on screen
-	static final int viewPortDeltaX = 4;		// X position change per frame (moves to the right side)	
+	private float horizontalSpeed = 7;				// Determines the maximum you can move per frame (H)
+	private float verticalSpeed = 40;					// Determines the maximum you can move per frame (V)
+	private float deltaVerticalDirection = 0.07f;	// Shows how many frames the jump up takes
+	private float verticalBreakPoint = 0.82f;
+	private float gravity = 32;					// Shows how fast you go down
+	private double verticalDirection = 0;						// Current jump up frame
+	private static int playerColor = Color.MAGENTA;		// Current player's color
+	private boolean isJumping = false;					// Is player moving up?
+	
+	private ArrayList<GameBlock> level;					// Array containing level data
+	private int currentLevel = 0;						// Current level number
+	private float viewPortX = -800;						// Current minimum X position to be drawn on screen
+	private float viewPortDeltaX = 4;		// X position change per frame (moves to the right side)	
 	
 	public GameEngine(int scrW, int scrH, Bitmap b, GameView gv){
-		w = h = 35;
-		x = 150;
-		y = 150;
+		scaleW = Scale.getWidthScale(scrW);
+		scaleH = Scale.getHeightScale(scrH);
+		Log.w("nk", "Screen scale is : " + scaleH);
+		// Scaling part
+		horizontalSpeed *= scaleW;
+		verticalSpeed *= scaleH;
+		gravity *= scaleH;
+		viewPortX *= scaleW;
+		viewPortDeltaX *= scaleW;
+		
+		w = h = (int)(35 * scaleH);
+		x = (int)(scaleW * 150);
+		y = (int)(scaleH * 150);
 		screenWidth = scrW;
 		screenHeight = scrH;
 		bitmap = b;
 		gameView = gv;
 	}
 	
-	public int getPlayerColor(){
+	public static int getPlayerColor(){
 		return playerColor;
 	}
 	
-//	public void setPlayerColor(int clr){
-//		playerColor = clr;
-//	}
+	public static void setPlayerColor(int clr){
+		playerColor = clr;
+	}
 	
 	public Rect getPlayerRect(){
 		return new Rect(x, y, x + w, y + h);
 	}
 	
-	public int getViewPortX(){
+	public float getViewPortX(){
 		return viewPortX;
 	}
 	
@@ -120,11 +132,12 @@ public class GameEngine {
 				isJumping = false;
 			}
 			else {
-				delta = Math.min(delta, acceleration);
-				y -= delta;
+//				delta = Math.min(delta, acceleration);
+//				y -= delta;
+				y -= acceleration;
 				
 				verticalDirection += deltaVerticalDirection;
-				if (verticalDirection > 0.82){
+				if (verticalDirection > verticalBreakPoint){
 					isJumping = false;
 					verticalDirection = 0;
 				}
@@ -134,7 +147,6 @@ public class GameEngine {
 			double delta = Math.min(raycastVertical(x, y+h, false), raycastVertical(x+w, y+h, false));
 			if (delta <= gravity){
 				y += delta - 1;
-				jumpingPoint = y;
 				isJumping = true;
 			}
 			else {
@@ -195,16 +207,16 @@ public class GameEngine {
 			while ((line = br.readLine()) != null){
 				Rect r = new Rect();
 				String [] arr = line.split("\t");
-				r.left = Integer.parseInt(arr[0]);
-				r.top = Integer.parseInt(arr[1]);
-				r.right = Integer.parseInt(arr[2]);
-				r.bottom = Integer.parseInt(arr[3]);
+				r.left = (int) (scaleW * Integer.parseInt(arr[0]));
+				r.top = (int) (scaleH * Integer.parseInt(arr[1]));
+				r.right = (int) (scaleW * Integer.parseInt(arr[2]));
+				r.bottom = (int) (scaleH * Integer.parseInt(arr[3]));
 				GameBlock gb = new GameBlock(this);
 				gb.setBlockRect(r);
 				if (arr.length > 4){
 					gb.isMoving = true;
-					gb.xDir = Integer.parseInt(arr[4]);
-					gb.yDir = Integer.parseInt(arr[5]);
+					gb.xDir = (int) (scaleW * Integer.parseInt(arr[4]));
+					gb.yDir = (int) (scaleH * Integer.parseInt(arr[5]));
 				}
 				if (arr.length > 6){
 					// get params, currently only collider
