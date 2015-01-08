@@ -1,6 +1,5 @@
 package com.nk.bloxmania;
 
-import android.graphics.Rect;
 import android.graphics.RectF;
 
 public class GameBlock {

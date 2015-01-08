@@ -18,10 +18,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
 public class GameView extends ScrollBackgroundView implements Runnable, SensorEventListener, SurfaceHolder.Callback {
