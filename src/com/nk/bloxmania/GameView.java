@@ -135,13 +135,14 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 				Thread.sleep(delta);
 			}
 			unregisterMotionListener();
-			LevelManager.updateDeaths(selectedLevel, GameEngine.DEATH_COUNT);
 			setUpButtonListeners();
 			if (levelCompleted){
+				LevelManager.saveSettings();
 				showCenteredText("Level completed!");
 				showLeftButton("Continue");
 			}
 			else {
+				LevelManager.updateDeaths(selectedLevel);
 				showCenteredText("You died..");
 				showLeftButton("Restart");
 			}

@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -13,6 +12,41 @@ import android.os.Environment;
 import android.util.Log;
 
 public class LevelManager {
+	enum SetVar{
+		unlocked {
+			@Override
+			void set(String s) {
+				int num;
+				try {
+					num = Integer.parseInt(s);
+				}
+				catch (Exception e){
+					num = 1;
+				}
+				LEVELS_UNLOCKED = num;
+			}
+		},
+		level {
+			@Override
+			void set(String s) {
+				String st = s.substring(0, s.indexOf("="));
+				String end = s.substring(s.indexOf("="));
+				int lvl = 0, num;
+				try {
+					lvl = Integer.parseInt(st);
+					num = Integer.parseInt(end);
+				}
+				catch (Exception e){
+					num = -1;
+				}
+				if (DEATHS != null){
+					DEATHS[lvl] = num;
+				}
+			}
+		};
+		abstract void set(String s);
+	}
+	
 	public final static String DEF_PATH = Environment.getExternalStorageDirectory().toString() + "/nk/";
 	public final static String FILE_NAME = "LevelSettings.dat";
 	public static final String LVLS_PATH = "levels/level";
@@ -20,20 +54,12 @@ public class LevelManager {
 	public static int LEVELS_UNLOCKED = 0;
 	public static int NUM_LEVELS = 0;
 	public static int NUM_BACKGROUNDS = 0;
-	public static ArrayList<Integer> DEATH_DATA = new ArrayList<Integer>();
+	public static int [] DEATHS;
 	
 	static {
 		// Load death data
 		Log.w("nk", "LevelManager started");
-		ArrayList<String> arr = readSettings();
-		if (arr != null){
-			for (String i : arr){
-				try {
-					DEATH_DATA.add(Integer.parseInt(i));
-				}
-				catch (Exception e){}
-			}
-		}
+		readSettings();
 
 		if (LEVELS_UNLOCKED == 0){
 			LEVELS_UNLOCKED++;
@@ -41,38 +67,28 @@ public class LevelManager {
 	}
 	
 	// Loads death/level settings from default file
-	private static ArrayList<String> readSettings(){
+	private static void readSettings(){
 		try {
-			ArrayList<String> arr = new ArrayList<String>();
 			BufferedReader br = new BufferedReader(new FileReader(new File(DEF_PATH + FILE_NAME)));
 			String line;
-			boolean first = true;
+			String st, end;
 			while ((line = br.readLine()) != null){
-				if (first){
-					LEVELS_UNLOCKED = Integer.parseInt(line);
-					first = !first;
-				}
-				else {
-					arr.add(line);
-				}
+				st = line.substring(0, line.indexOf("="));
+				end = line.substring(line.indexOf("="));
+				SetVar.valueOf(st).set(end);
 			}
 			br.close();
-			return arr;
 		}
 		catch (Exception e){
 			saveSettings();
 			e.printStackTrace();
-			return null;
 		}
 	}
 	
-	// Adds deathCount to level's death count
-	public static void updateDeaths(int numLvl, int deathCount) {
-		if (numLvl < DEATH_DATA.size()){
-			DEATH_DATA.set(numLvl, DEATH_DATA.get(numLvl) + deathCount);
-		}
-		else {
-			DEATH_DATA.add(deathCount);
+	
+	public static void updateDeaths(int numLvl){
+		if (DEATHS != null && numLvl < DEATHS.length){
+			DEATHS[numLvl]++;
 		}
 		saveSettings();
 	}
@@ -82,14 +98,14 @@ public class LevelManager {
 			File f = new File(DEF_PATH);
 			f.mkdir();
 			PrintWriter pw = new PrintWriter(new File(DEF_PATH + FILE_NAME));
-			pw.println(LEVELS_UNLOCKED);
-			if (DEATH_DATA != null){
-				for (Integer i : DEATH_DATA){
-					pw.println(i);
+			pw.println("unlocked=" + LEVELS_UNLOCKED);
+			if (DEATHS != null){
+				for (int i = 0; i < DEATHS.length; i++){
+					pw.println("level=" + i + "=" + DEATHS[i]);
 				}
 			}
 			pw.close();
-			Log.w("nk", "Successfully written to settings file : " + DEATH_DATA.size() + " entries");
+			Log.w("nk", "Successfully written to level settings file : " + DEATHS.length + " entries");
 		}
 		catch (Exception e){
 			e.printStackTrace();
@@ -107,6 +123,7 @@ public class LevelManager {
 				break;
 			}
 		}
+		DEATHS = new int[NUM_LEVELS];
 		Log.w("nk", "LevelManager counted " + NUM_LEVELS + " levels in total.");
 	}
 
@@ -125,8 +142,8 @@ public class LevelManager {
 	}
 	
 	public static int getDeaths(int numLvl){
-		if (numLvl < DEATH_DATA.size()){
-			return DEATH_DATA.get(numLvl);
+		if (DEATHS != null && numLvl < DEATHS.length){
+			return DEATHS[numLvl];
 		}
 		else {
 			return 0;

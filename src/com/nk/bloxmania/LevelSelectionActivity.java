@@ -5,7 +5,6 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Space;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -43,24 +42,22 @@ public class LevelSelectionActivity extends CustomActivity{
         	final Button button = new Button(this);
         	button.setTextSize(SMALL_SIZE);
     		button.setBackgroundResource(R.drawable.button);
+            button.setLayoutParams(new TableRow.LayoutParams(w, h));
+    		button.setTypeface(font);
         	final int lvl = nr;
         	if (lvl >= LevelManager.LEVELS_UNLOCKED){
-        		button.setText("X" + nr);
+        		button.setText("X");
         	}
         	else {
         		button.setText("" + nr);
+        		button.setOnClickListener(new View.OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						GameView.selectedLevel = lvl;
+						startCustomActivity(GameActivity.class);
+					}
+        		});
         	}
-            button.setLayoutParams(new TableRow.LayoutParams(w, h));
-            button.setOnClickListener(new View.OnClickListener(){
-
-				@Override
-				public void onClick(View v) {
-					GameView.selectedLevel = lvl;
-					startCustomActivity(GameActivity.class);
-				}
-            });
-
-    		button.setTypeface(font);
             tr.addView(button);
         	
         	nr++;
@@ -79,8 +76,9 @@ public class LevelSelectionActivity extends CustomActivity{
         }
 	}
 	
-	public Space createSpace(int w, int h){
-		Space spc = new Space(this);
+	public View createSpace(int w, int h){
+		Button spc = new Button(this);
+		spc.setVisibility(View.INVISIBLE);
 		spc.setMinimumHeight(h);
 		spc.setMinimumWidth(w);
 		return spc;
