@@ -30,17 +30,17 @@ public class LevelManager {
 			@Override
 			void set(String s) {
 				String st = s.substring(0, s.indexOf("="));
-				String end = s.substring(s.indexOf("="));
-				int lvl = 0, num;
+				String end = s.substring(s.indexOf("=") + 1);
+				int lvl, num;
 				try {
 					lvl = Integer.parseInt(st);
 					num = Integer.parseInt(end);
+					if (DEATHS != null){
+						DEATHS[lvl] = num;
+					}
 				}
 				catch (Exception e){
-					num = -1;
-				}
-				if (DEATHS != null){
-					DEATHS[lvl] = num;
+					e.printStackTrace();
 				}
 			}
 		};
@@ -56,36 +56,24 @@ public class LevelManager {
 	public static int NUM_BACKGROUNDS = 0;
 	public static int [] DEATHS;
 	
-	static {
-		// Load death data
-		Log.w("nk", "LevelManager started");
-		readSettings();
-
-		if (LEVELS_UNLOCKED == 0){
-			LEVELS_UNLOCKED++;
-		}
-	}
-	
 	// Loads death/level settings from default file
-	private static void readSettings(){
+	private static void loadSettings(){
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(DEF_PATH + FILE_NAME)));
 			String line;
 			String st, end;
 			while ((line = br.readLine()) != null){
 				st = line.substring(0, line.indexOf("="));
-				end = line.substring(line.indexOf("="));
+				end = line.substring(line.indexOf("=") + 1);
 				SetVar.valueOf(st).set(end);
 			}
 			br.close();
 		}
 		catch (Exception e){
-			saveSettings();
 			e.printStackTrace();
 		}
 	}
-	
-	
+		
 	public static void updateDeaths(int numLvl){
 		if (DEATHS != null && numLvl < DEATHS.length){
 			DEATHS[numLvl]++;
@@ -96,7 +84,9 @@ public class LevelManager {
 	public static void saveSettings(){
 		try {
 			File f = new File(DEF_PATH);
-			f.mkdir();
+			if (!f.isDirectory()){
+				f.mkdir();
+			}
 			PrintWriter pw = new PrintWriter(new File(DEF_PATH + FILE_NAME));
 			pw.println("unlocked=" + LEVELS_UNLOCKED);
 			if (DEATHS != null){
@@ -125,6 +115,11 @@ public class LevelManager {
 		}
 		DEATHS = new int[NUM_LEVELS];
 		Log.w("nk", "LevelManager counted " + NUM_LEVELS + " levels in total.");
+		loadSettings();
+
+		if (LEVELS_UNLOCKED == 0){
+			LEVELS_UNLOCKED++;
+		}
 	}
 
 	public static void countBackgrounds(Context c){

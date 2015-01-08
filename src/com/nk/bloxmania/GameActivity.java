@@ -38,7 +38,6 @@ public class GameActivity extends CustomActivity {
 	}
 	
 	protected void saveLevelSettings(){
-//		LevelManager.updateDeaths(GameView.selectedLevel, GameEngine.DEATH_COUNT);
 		GameEngine.DEATH_COUNT = 0;
 	}
 	

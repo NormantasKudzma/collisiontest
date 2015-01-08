@@ -17,6 +17,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 
 public class GameView extends ScrollBackgroundView implements Runnable, SensorEventListener, SurfaceHolder.Callback {
 	GameEngine engine;
@@ -42,6 +48,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 	// Level related variables
 
 	boolean levelCompleted = false;
+	boolean gameOver = false;
 	public static int selectedLevel = 0;
 	ArrayList<GameButton> buttons = new ArrayList<GameButton>();
 	Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/disposable_droid.ttf");
@@ -134,9 +141,16 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 				}
 				Thread.sleep(delta);
 			}
+			if (levelCompleted || gameOver){
+				Log.w("nk", "Show ad called");
+				showAd();
+			}
 			unregisterMotionListener();
 			setUpButtonListeners();
 			if (levelCompleted){
+				if (selectedLevel + 1 == LevelManager.LEVELS_UNLOCKED){
+					LevelManager.LEVELS_UNLOCKED++;
+				}
 				LevelManager.saveSettings();
 				showCenteredText("Level completed!");
 				showLeftButton("Continue");
@@ -171,9 +185,6 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		        				if (i.text.equals("Back to menu")){
 		        					// Add up deaths, show main menu
 		        					GameEngine.DEATH_COUNT = 0;
-		        					if (levelCompleted && selectedLevel + 1 == LevelManager.LEVELS_UNLOCKED){
-			        					LevelManager.LEVELS_UNLOCKED++;
-		        					}
 		        					finish();
 		        					CustomActivity host = (CustomActivity)getContext();
 		        					host.startCustomActivity(LevelSelectionActivity.class);
@@ -182,9 +193,6 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		        				if (levelCompleted){
 		        					// Add up deaths, start next level
 		        					GameEngine.DEATH_COUNT = 0;
-		        					if (selectedLevel + 1 == LevelManager.LEVELS_UNLOCKED){
-			        					LevelManager.LEVELS_UNLOCKED++;
-		        					}
 		        					selectedLevel++;
 		        					recreate();
 		        					return true;
@@ -359,13 +367,11 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 	}
 	
-
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		this.holder = holder;
 		new Thread(this).start();
 	}
-	
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
@@ -374,5 +380,26 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		}
 		this.holder = null;
 		finish();
+	}
+	
+	private void showAd(){
+		((GameActivity)getContext()).runOnUiThread(new Runnable(){
+			@Override
+			public void run() {
+				RelativeLayout rl = (RelativeLayout)getParent();
+				AdView ad = (AdView)rl.findViewById(R.id.adView);
+				
+				AdRequest request = new AdRequest.Builder()
+					.addTestDevice("C6AF4F933084B9594FFDC8A6FBA741EF")
+					.build();
+				ad.loadAd(request);
+				ad.setBackgroundColor(Color.BLACK);
+				rl.postInvalidate();
+			}
+		});
+	}
+	
+	public void setGameOver(){
+		gameOver = true;
 	}
 }

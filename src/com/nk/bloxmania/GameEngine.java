@@ -116,10 +116,11 @@ public class GameEngine {
 		}
 		
 		if (raycastHorizontal(x, y + 1, true) == 0 || raycastHorizontal(x, y + h - 1, true) == 0 ||
-				raycastHorizontal(x + w, y, false) == 0 || raycastHorizontal(x+w, y + h - 1, false) == 0){
-				Log.w("nk", "Dead, touched wall");
-				gameView.isDone(true);
-				GameEngine.DEATH_COUNT++;
+			raycastHorizontal(x + w, y, false) == 0 || raycastHorizontal(x+w, y + h - 1, false) == 0){
+			Log.w("nk", "Dead, touched wall");
+			gameView.setGameOver();
+			gameView.isDone(true);
+			GameEngine.DEATH_COUNT++;
 		}
 	}
 	
@@ -133,8 +134,6 @@ public class GameEngine {
 				isJumping = false;
 			}
 			else {
-//				delta = Math.min(delta, acceleration);
-//				y -= delta;
 				y -= acceleration;
 				
 				verticalDirection += deltaVerticalDirection;

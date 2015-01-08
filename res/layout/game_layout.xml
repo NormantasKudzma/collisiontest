@@ -1,11 +1,10 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/LinearLayout1"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/game_relative_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center"
-    android:orientation="horizontal"
-    tools:context=".MainActivity" >
+    android:orientation="horizontal">
 
     <com.nk.bloxmania.GameView
         android:id="@+id/imageView1"
@@ -13,4 +12,12 @@
         android:layout_height="fill_parent"
         android:contentDescription="@string/empty_string"/>
 
-</LinearLayout>
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-4474734380092745/3038826317"
+        />
+</RelativeLayout>
