@@ -49,11 +49,11 @@ public class OptionsActivity extends MainActivity{
 			@Override
 			public void onProgressChanged(SeekBar s, int val, boolean user) {
 				float vol = 1.0f * val / MAX_VOL;
-				CustomActivity.musicManager.setVolume(vol);
+				MusicManager.setVolume(vol);
 				updateValue("volume", vol + "");
 			}
 		});
-		volume.setProgress((int)(CustomActivity.musicManager.getVolume() * MAX_VOL));
+		volume.setProgress((int)(MusicManager.getVolume() * MAX_VOL));
 	
 		RadioGroup rg = (RadioGroup)findViewById(R.id.color_chooser_buttons);
 		rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {		

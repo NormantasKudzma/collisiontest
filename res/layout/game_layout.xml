@@ -12,12 +12,4 @@
         android:layout_height="fill_parent"
         android:contentDescription="@string/empty_string"/>
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-4474734380092745/3038826317"
-        />
 </RelativeLayout>

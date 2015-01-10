@@ -17,12 +17,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
-import android.widget.RelativeLayout;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-
-public class GameView extends ScrollBackgroundView implements Runnable, SensorEventListener, SurfaceHolder.Callback {
+public class GameView extends ScrollBackgroundView implements Runnable,  SurfaceHolder.Callback {
 	GameEngine engine;
 	SurfaceHolder holder;
 	
@@ -41,21 +37,34 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 	// Rotation and sensor variables
 	private SensorManager mSensorManager;
 	private Sensor mSensor;
+	private CustomSensorListener mSensorListener;
 	float screenRotation = 0;				// Direction to move player on the next keyframe
 	
 	// Level related variables
-
 	boolean levelCompleted = false;
 	boolean gameOver = false;
 	public static int selectedLevel = 0;
+	private float levelCompletionDelta = 64;
 	ArrayList<GameButton> buttons = new ArrayList<GameButton>();
 	Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/disposable_droid.ttf");
 	
 	public GameView(Context c, AttributeSet attrs){
 		super(c, attrs);
+		initialize();
+		// tutorial level has tutorial background, else normal bg
+		if (selectedLevel == 0){
+			loadBackground(selectedLevel);
+		}
+		else {
+			loadBackground(((selectedLevel % (LevelManager.NUM_BACKGROUNDS - 1)) + 1));
+		}
+
+		engine = new GameEngine(screenWidth, screenHeight, bitmap, this);
+		
 		mSensorManager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
 		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		mSensorManager.registerListener(this, mSensor, 50000);
+		mSensorListener = new CustomSensorListener();
+		mSensorManager.registerListener(mSensorListener, mSensor, (int)(sleepInterval * 1000));
 		setScrollSpeedY(0);
 		((CustomActivity)getContext()).getWindow().setBackgroundDrawable(null);
 		setBackgroundResource(0);
@@ -65,14 +74,6 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 	
 	@Override
 	protected void initialize() {
-		// tutorial level has tutorial background, else normal bg
-		if (selectedLevel == 0){
-			loadBackground(selectedLevel);
-		}
-		else {
-			loadBackground(((selectedLevel % (LevelManager.NUM_BACKGROUNDS - 1)) + 1));
-		}
-		
 		deathCounterX = screenWidth * 3 / 18;
 		deathCounterY = screenHeight * 1 / 9;
 		
@@ -80,9 +81,9 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		bigTextSz = (int) (scaleH * bigTextSz);
 		medTextSz = (int) (scaleH * medTextSz);
 		smallTextSz = (int) (scaleH * smallTextSz);
-		
-		engine = new GameEngine(screenWidth, screenHeight, bitmap, this);
+		levelCompletionDelta *= scaleH;
 	}
+	
 	
 	void drawPlayer(){
 		// Draw body
@@ -126,6 +127,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 				// Move player, check collisions, draw everything
 				t0 = System.currentTimeMillis();
 				performDraws();
+				screenRotation = mSensorListener.getValue();
 				engine.movePlayerVertical();
 				engine.movePlayerHorizontal(screenRotation);
 				drawPlayer();
@@ -139,10 +141,6 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 				}
 				Thread.sleep(delta);
 			}
-//			if (levelCompleted || gameOver){
-//				Log.w("nk", "Show ad called");
-//				showAd();
-//			}
 			unregisterMotionListener();
 			setUpButtonListeners();
 			if (levelCompleted){
@@ -150,21 +148,22 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 					LevelManager.LEVELS_UNLOCKED++;
 				}
 				LevelManager.saveSettings();
-				showCenteredText("Level completed!");
-				showLeftButton("Continue");
+				showCenteredText(GameButton.COMPLETED);
+				showLeftButton(GameButton.CONTINUE);
 			}
 			else {
 				LevelManager.updateDeaths(selectedLevel);
-				showCenteredText("You died..");
-				showLeftButton("Restart");
+				showCenteredText(GameButton.GAME_OVER);
+				showLeftButton(GameButton.RESTART);
 			}
-			showRightButton("Back to menu");
+			showRightButton(GameButton.MENU);
 			lockDrawAndPost();
 		}
 		catch (Exception e){
 			e.printStackTrace();
 		}
 	}
+	
 	
 	void setUpButtonListeners(){
 		setOnTouchListener(new View.OnTouchListener(){
@@ -180,7 +179,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		        		for (GameButton i : buttons){
 		        			if (i.r.contains(x, y)){
 		        				unregisterTouchListener();
-		        				if (i.text.equals("Back to menu")){
+		        				if (i.text.equals(GameButton.MENU)){
 		        					// Add up deaths, show main menu
 		        					GameEngine.DEATH_COUNT = 0;
 		        					finish();
@@ -212,7 +211,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 	void showLeftButton(String txt){
 		int xPos = screenWidth / 4;
 		int yPos = screenHeight * 4 / 5;
-		int h = 60;
+		int h = medTextSz;
 		int w = showText(txt, xPos, yPos, h);
 		GameButton b = new GameButton();
 		b.r = new Rect(xPos - w, yPos - h, xPos + 2 * w, yPos);
@@ -317,12 +316,14 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		}
 	}
 	
+	
 	void checkLevelEnd(int viewPortX, int plrX, int lastBlockX){
-		if (viewPortX + plrX > lastBlockX + 64){
+		if (viewPortX + plrX > lastBlockX + levelCompletionDelta){
 			levelCompleted = true;
 			done = true;
 		}
 	}
+	
 	
 	@Override
 	public void finish() {
@@ -337,18 +338,11 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 	
 	protected void unregisterMotionListener(){
 		if (mSensorManager != null){
-			mSensorManager.unregisterListener(this, mSensor);
+			mSensorManager.unregisterListener(mSensorListener, mSensor);
+			mSensorListener = null;
 			mSensorManager = null;
 			mSensor = null;
 		}
-	}
-	
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {}
-	
-	@Override
-	public void onSensorChanged(SensorEvent event) {
-		screenRotation = event.values[1];
 	}
 
 	public void recreate(){
@@ -358,8 +352,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 	}
 	
 	@Override
-	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-	}
+	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
 	
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
@@ -367,6 +360,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		new Thread(this).start();
 	}
 
+	
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		if (holder != null){
@@ -374,30 +368,6 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		}
 		this.holder = null;
 		finish();
-	}
-	
-	private void showAd(){
-		((GameActivity)getContext()).runOnUiThread(new Runnable(){
-			@Override
-			public void run() {
-				try {
-					if (!((GameActivity)GameView.this.getContext()).isFinishing()){
-						RelativeLayout rl = (RelativeLayout)getParent();
-						AdView ad = (AdView)rl.findViewById(R.id.adView);
-						
-						AdRequest request = new AdRequest.Builder()
-//							.addTestDevice("C6AF4F933084B9594FFDC8A6FBA741EF")
-							.build();
-						ad.loadAd(request);
-						ad.setBackgroundColor(Color.TRANSPARENT);
-						rl.postInvalidate();
-					}
-				}
-				catch (Exception e){
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 	
 	public void setGameOver(){

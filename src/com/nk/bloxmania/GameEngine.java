@@ -117,7 +117,7 @@ public class GameEngine {
 		
 		if (raycastHorizontal(x, y + 1, true) == 0 || raycastHorizontal(x, y + h - 1, true) == 0 ||
 			raycastHorizontal(x + w, y, false) == 0 || raycastHorizontal(x+w, y + h - 1, false) == 0){
-			Log.w("nk", "Dead, touched wall");
+			Log.w("nk", "Dead, touched wall plrx " + (x+viewPortX) + " lastblock right " + level.get(level.size() - 1).r.right);
 			gameView.setGameOver();
 			gameView.isDone(true);
 			GameEngine.DEATH_COUNT++;

@@ -12,8 +12,6 @@ public class CustomActivity extends Activity{
 	public static int SMALL_SIZE = BIG_SIZE / 2;
 	protected static float scale = -1;
 	
-	protected static MusicManager musicManager = null;
-	
 	protected Typeface font;
 	protected ScrollBackgroundView sbv;
 	protected int scrollBackgroundResource = -1;
@@ -28,10 +26,8 @@ public class CustomActivity extends Activity{
 			scale = Scale.getUniformScale(height);
 			BIG_SIZE = (int)(BIG_SIZE * scale);
 			SMALL_SIZE = BIG_SIZE / 2;
-		}
-		
-		if (CustomActivity.musicManager == null){
-			CustomActivity.musicManager = new MusicManager(getApplicationContext());
+			
+			MusicManager.initMusicManager(getApplicationContext());
 		}
 	}
 	
@@ -43,19 +39,19 @@ public class CustomActivity extends Activity{
 		
 	@Override
 	protected void onPause() {
-		CustomActivity.musicManager.pause();
+		MusicManager.pause();
 		super.onPause();
 	}
 	
 	@Override
 	protected void onResume() {
-		CustomActivity.musicManager.resume();
+		MusicManager.resume();
 		super.onResume();
 	}
 	
 	@Override
 	protected void onStart() {
-		CustomActivity.musicManager.resume();
+		MusicManager.resume();
 		super.onStart();
 	}
 		

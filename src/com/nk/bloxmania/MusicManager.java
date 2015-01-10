@@ -7,48 +7,52 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.util.Log;
 
-public class MusicManager{
-	private final String FILE_PREFIX = "audio";
-	private final String FILE_SUFFIX = "";
+public class MusicManager{	
+	private static final String FILE_PREFIX = "audio";
+	private static final String FILE_SUFFIX = "";
 	
-	private float volume = 0.5f;
-	ArrayList<Integer> files;
-	private int nr = 0;
-	private boolean autoplay = true;	
-	private MediaPlayer mp;
-	private Context c;
+	private static float volume = 0.5f;
+	private static ArrayList<Integer> files;
+	private static int nr = 0;
+	private static boolean autoplay = true;	
+	private static MediaPlayer mp;
+	private static Context ctx;
 	
-	public MusicManager(Context c) {
-		this.c = c;
-		mp = new MediaPlayer();
-		mp.setVolume(volume, volume);
-		loadAudioFiles(c);
-		shufflePlaylist();	
-		mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {			
-			@Override
-			public void onPrepared(MediaPlayer m) {
-				m.start();
-			}
-		});	
-		if (autoplay){
-			mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {		
+	public static void initMusicManager(Context c){
+		if (mp == null){
+			ctx = c;
+			mp = new MediaPlayer();
+			mp.setVolume(volume, volume);
+			loadAudioFiles(c);
+			shufflePlaylist();	
+			mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {			
 				@Override
-				public void onCompletion(MediaPlayer m) {
-					nr++;
-					if (nr >= files.size()){
-						nr = 0;
-						shufflePlaylist();
-					}
-					play(nr);				
+				public void onPrepared(MediaPlayer m) {
+					m.start();
 				}
-			});
+			});	
+			if (autoplay){
+				mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {		
+					@Override
+					public void onCompletion(MediaPlayer m) {
+						nr++;
+						if (nr >= files.size()){
+							nr = 0;
+							shufflePlaylist();
+						}
+						play(nr);				
+					}
+				});
+			}
+			Log.w("nk", "Music manager started");
 		}
-		Log.w("nk", "Music manager started");
+		
 	}
 
-	private void shufflePlaylist(){
+	private static void shufflePlaylist(){
 		int last = files.get(files.size() - 1);
 		int temp;
 		Random rnd = new Random();
@@ -62,7 +66,7 @@ public class MusicManager{
 		}
 	}
 	
-	private void loadAudioFiles(Context c){
+	private static void loadAudioFiles(Context c){
 		Resources res = c.getResources();
 		files = new ArrayList<Integer>();
 		int i = 0;
@@ -70,8 +74,13 @@ public class MusicManager{
 		while (true){
 			id = res.getIdentifier(FILE_PREFIX + i + FILE_SUFFIX, "raw", c.getPackageName());
 			if (id != 0){
-				files.add(id);
-				i++;
+				try {
+					files.add(id);
+					i++;
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
 			}
 			else {
 				break;
@@ -80,7 +89,7 @@ public class MusicManager{
 		Log.w("nk", "Music manager counted " + i + " audio files.");
 	}
 	
-	public void setVolume(float vol){
+	public static void setVolume(float vol){
 		if (vol > 1.0f){
 			vol = 1.0f;
 		}
@@ -95,49 +104,49 @@ public class MusicManager{
 		mp.setVolume(volume, volume);
 	}
 	
-	public float getVolume(){
+	public static float getVolume(){
 		return volume;
 	}
 	
-	public void pause(){
+	public static void pause(){
 		if (mp.isPlaying()){
 			mp.pause();
 		}
 	}
 	
-	public void resume(){
+	public static void resume(){
 		if (!mp.isPlaying()){
 			mp.start();
 		}
 	}
 	
-	public void start(){
+	public static void start(){
 		mp.setVolume(volume, volume);
 		play(nr);
 	}
 	
-	public void play(int i){
-		AssetFileDescriptor afd = c.getResources().openRawResourceFd(files.get(i));
-		
+	public static void play(int i){
 		try {
+			AssetFileDescriptor afd = ctx.getResources().openRawResourceFd(files.get(i));
 			mp.reset();
 			mp.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getDeclaredLength());
 			mp.prepare();
 			afd.close();
 		}
 		catch (Exception e){
-			Log.d("nk", "Cannot play : " + e.toString());
+			e.printStackTrace();
+			finish();
 		}		
 	}
 	
-	public void finish(){
+	public static void finish(){
 		Log.w("nk", "MusicManager stopped.");
 		if (mp != null){
 			mp.stop();
 			mp.release();
 			mp = null;
 		}
-		c = null;
 		files = null;
+		ctx = null;
 	}
 }

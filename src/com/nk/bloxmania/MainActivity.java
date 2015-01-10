@@ -25,7 +25,7 @@ public class MainActivity extends CustomActivity{
 				catch (Exception e){
 					vol = 0.5f;
 				}
-				CustomActivity.musicManager.setVolume(vol);
+				MusicManager.setVolume(vol);
 			}
 		},
 		plrcolor {

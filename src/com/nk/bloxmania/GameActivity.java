@@ -3,10 +3,6 @@ package com.nk.bloxmania;
 import java.lang.ref.WeakReference;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.RelativeLayout;
-
-import com.google.android.gms.ads.AdView;
 
 public class GameActivity extends CustomActivity {
 	WeakReference<GameView> gv;
@@ -26,19 +22,6 @@ public class GameActivity extends CustomActivity {
 	
 	@Override
 	protected void onDestroy() {
-		AdView ad = (AdView)findViewById(R.id.adView);
-		if (ad != null){
-			for (int i = 0; i < ad.getChildCount(); i++) {
-				View v = ad.getChildAt(i);
-				v.destroyDrawingCache();
-			}
-			RelativeLayout rl = (RelativeLayout)findViewById(R.id.game_relative_layout);						
-			rl.removeView(ad);
-			ad.pause();
-			ad.destroy();
-			ad.destroyDrawingCache();
-			ad = null;
-		}
 		killThread();
 		saveLevelSettings();
 		super.onDestroy();
