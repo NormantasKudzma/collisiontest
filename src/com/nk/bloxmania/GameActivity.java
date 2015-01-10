@@ -1,15 +1,21 @@
 package com.nk.bloxmania;
 
+import java.lang.ref.WeakReference;
+
 import android.os.Bundle;
+import android.view.View;
+import android.widget.RelativeLayout;
+
+import com.google.android.gms.ads.AdView;
 
 public class GameActivity extends CustomActivity {
-	GameView gv;
+	WeakReference<GameView> gv;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_layout);
-		gv = ((GameView)findViewById(R.id.imageView1));
+		gv = new WeakReference<GameView>(((GameView)findViewById(R.id.imageView1)));
 	}
 	
 	@Override
@@ -19,19 +25,20 @@ public class GameActivity extends CustomActivity {
 	}
 	
 	@Override
-	protected void onPause() {
-		gv.paused = true;
-		super.onPause();
-	}
-	
-	@Override
-	protected void onResume() {
-		gv.paused = false;
-		super.onResume();
-	}
-	
-	@Override
 	protected void onDestroy() {
+		AdView ad = (AdView)findViewById(R.id.adView);
+		if (ad != null){
+			for (int i = 0; i < ad.getChildCount(); i++) {
+				View v = ad.getChildAt(i);
+				v.destroyDrawingCache();
+			}
+			RelativeLayout rl = (RelativeLayout)findViewById(R.id.game_relative_layout);						
+			rl.removeView(ad);
+			ad.pause();
+			ad.destroy();
+			ad.destroyDrawingCache();
+			ad = null;
+		}
 		killThread();
 		saveLevelSettings();
 		super.onDestroy();
@@ -42,6 +49,10 @@ public class GameActivity extends CustomActivity {
 	}
 	
 	void killThread(){
-		gv.finish();
+		if (gv != null && gv.get() != null){
+			gv.get().finish();
+			gv.clear();
+			gv = null;
+		}
 	}
 }

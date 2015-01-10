@@ -139,10 +139,10 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 				}
 				Thread.sleep(delta);
 			}
-			if (levelCompleted || gameOver){
-				Log.w("nk", "Show ad called");
-				showAd();
-			}
+//			if (levelCompleted || gameOver){
+//				Log.w("nk", "Show ad called");
+//				showAd();
+//			}
 			unregisterMotionListener();
 			setUpButtonListeners();
 			if (levelCompleted){
@@ -327,6 +327,7 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 	@Override
 	public void finish() {
 		unregisterTouchListener();
+		unregisterMotionListener();
 		super.finish();
 	}
 	
@@ -335,16 +336,11 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 	}
 	
 	protected void unregisterMotionListener(){
-		if (mSensorManager != null && mSensor != null){
+		if (mSensorManager != null){
 			mSensorManager.unregisterListener(this, mSensor);
+			mSensorManager = null;
+			mSensor = null;
 		}
-		else {
-			if (mSensorManager != null){
-				mSensorManager.unregisterListener(this);
-			}
-		}
-		mSensorManager = null;
-		mSensor = null;
 	}
 	
 	@Override
@@ -384,15 +380,22 @@ public class GameView extends ScrollBackgroundView implements Runnable, SensorEv
 		((GameActivity)getContext()).runOnUiThread(new Runnable(){
 			@Override
 			public void run() {
-				RelativeLayout rl = (RelativeLayout)getParent();
-				AdView ad = (AdView)rl.findViewById(R.id.adView);
-				
-				AdRequest request = new AdRequest.Builder()
-					.addTestDevice("C6AF4F933084B9594FFDC8A6FBA741EF")
-					.build();
-				ad.loadAd(request);
-				ad.setBackgroundColor(Color.BLACK);
-				rl.postInvalidate();
+				try {
+					if (!((GameActivity)GameView.this.getContext()).isFinishing()){
+						RelativeLayout rl = (RelativeLayout)getParent();
+						AdView ad = (AdView)rl.findViewById(R.id.adView);
+						
+						AdRequest request = new AdRequest.Builder()
+//							.addTestDevice("C6AF4F933084B9594FFDC8A6FBA741EF")
+							.build();
+						ad.loadAd(request);
+						ad.setBackgroundColor(Color.TRANSPARENT);
+						rl.postInvalidate();
+					}
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
 			}
 		});
 	}
