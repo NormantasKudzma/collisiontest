@@ -115,8 +115,9 @@ public class GameEngine {
 			}
 		}
 		
-		if (raycastHorizontal(x, y + 1, true) == 0 || raycastHorizontal(x, y + h - 1, true) == 0 ||
-			raycastHorizontal(x + w, y, false) == 0 || raycastHorizontal(x+w, y + h - 1, false) == 0){
+		int maxDepth = Math.abs((int)movementValue) + 1;
+		if (raycastHorizontal(x, y + 1, true, maxDepth) == 0 || raycastHorizontal(x, y + h - 1, true, maxDepth) == 0 ||
+			raycastHorizontal(x + w, y, false, maxDepth) == 0 || raycastHorizontal(x+w, y + h - 1, false, maxDepth) == 0){
 			Log.w("nk", "Dead, touched wall plrx " + (x+viewPortX) + " lastblock right " + level.get(level.size() - 1).r.right);
 			gameView.setGameOver();
 			gameView.isDone(true);
@@ -125,9 +126,12 @@ public class GameEngine {
 	}
 	
 	public void movePlayerVertical(){
+		int maxDepth;
 		if (isJumping){
-			double delta = Math.min(raycastVertical(x, y, true), raycastVertical(x+w, y, true));
 			double acceleration = Math.cos(2 * verticalDirection) * verticalSpeed;
+			maxDepth = (int)acceleration + 1;
+			double delta = Math.min(raycastVertical(x, y, true, maxDepth), raycastVertical(x+w, y, true, maxDepth));
+			
 			if (delta < acceleration){
 				y -= delta - 1;
 				verticalDirection = 0;
@@ -144,7 +148,8 @@ public class GameEngine {
 			}
 		}
 		else {
-			double delta = Math.min(raycastVertical(x, y+h, false), raycastVertical(x+w, y+h, false));
+			maxDepth = (int)gravity + 1;
+			double delta = Math.min(raycastVertical(x, y+h, false, maxDepth), raycastVertical(x+w, y+h, false, maxDepth));
 			if (delta <= gravity){
 				y += delta - 1;
 				isJumping = true;
@@ -166,10 +171,14 @@ public class GameEngine {
 	}
 	
 	public int raycastHorizontal(int xPos, int yPos, boolean left){
+		return raycastHorizontal(xPos, yPos, left, screenWidth);
+	}
+	
+	public int raycastHorizontal(int xPos, int yPos, boolean left, int maxDepth){
 		int result = 0;
 		int delta = left ? -1 : 1;
 		int wall = Color.BLACK;
-		while (xPos > 0 && xPos < screenWidth){
+		while (xPos > 0 && xPos < screenWidth && result < maxDepth){
 			if (bitmap.getPixel(xPos, yPos) != wall){
 				result++;
 				xPos += delta;
@@ -181,13 +190,17 @@ public class GameEngine {
 		return result;
 	}
 	
-	// Simple raycast methods to determine distances
 	public int raycastVertical(int xPos, int yPos, boolean up){
+		return raycastVertical(xPos, yPos, up, screenHeight);
+	}
+	
+	// Simple raycast methods to determine distances
+	public int raycastVertical(int xPos, int yPos, boolean up, int maxDepth){
 		int result = 0;
 		int delta = up ? -1 : 1;
 		int wall = Color.BLACK;
 
-		while (yPos > 0 && yPos < screenHeight){
+		while (yPos > 0 && yPos < screenHeight && result < maxDepth){
 			if (bitmap.getPixel(xPos, yPos) != wall){
 				result++;
 				yPos += delta;

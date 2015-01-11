@@ -19,8 +19,8 @@ import android.view.SurfaceHolder;
 import android.view.View;
 
 public class GameView extends ScrollBackgroundView implements Runnable,  SurfaceHolder.Callback {
-	GameEngine engine;
-	SurfaceHolder holder;
+	private GameEngine engine;
+	private SurfaceHolder holder;
 	
 	// Text display variables
 	private int newBlack = 0xff000001;
@@ -83,7 +83,6 @@ public class GameView extends ScrollBackgroundView implements Runnable,  Surface
 		smallTextSz = (int) (scaleH * smallTextSz);
 		levelCompletionDelta *= scaleH;
 	}
-	
 	
 	void drawPlayer(){
 		// Draw body
@@ -163,8 +162,7 @@ public class GameView extends ScrollBackgroundView implements Runnable,  Surface
 			e.printStackTrace();
 		}
 	}
-	
-	
+		
 	void setUpButtonListeners(){
 		setOnTouchListener(new View.OnTouchListener(){
 
@@ -316,14 +314,12 @@ public class GameView extends ScrollBackgroundView implements Runnable,  Surface
 		}
 	}
 	
-	
 	void checkLevelEnd(int viewPortX, int plrX, int lastBlockX){
 		if (viewPortX + plrX > lastBlockX + levelCompletionDelta){
 			levelCompleted = true;
 			done = true;
 		}
 	}
-	
 	
 	@Override
 	public void finish() {
@@ -359,7 +355,6 @@ public class GameView extends ScrollBackgroundView implements Runnable,  Surface
 		this.holder = holder;
 		new Thread(this).start();
 	}
-
 	
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
