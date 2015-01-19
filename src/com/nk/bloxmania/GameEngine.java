@@ -12,6 +12,60 @@ import android.graphics.RectF;
 import android.util.Log;
 
 public class GameEngine {
+	private enum SetVar{
+		gravity {
+			@Override
+			void set(GameEngine instance, String s){
+				float num;
+				try {
+					num = Float.parseFloat(s);
+					instance.setScaledGravity(num);
+				}
+				catch (Exception e){}
+			}
+		},
+		viewportspeed {
+			@Override
+			void set(GameEngine instance, String s) {
+				float num;
+				try {
+					num = Float.parseFloat(s);
+					instance.setScaledViewPortDeltaX(num);
+				}
+				catch (Exception e){}
+			}
+		},
+		levelmodtext {
+			@Override
+			void set(GameEngine instance, String s){
+				instance.gameView.setInfoText(s);
+			}
+		},
+		verticalspeed {
+			@Override
+			void set(GameEngine instance, String s) {
+				float num;
+				try {
+					num = Float.parseFloat(s);
+					instance.setScaledVerticalSpeed(num);
+				}
+				catch (Exception e){}
+			}
+		},
+		horizontalspeed {
+			@Override
+			void set(GameEngine instance, String s) {
+				float num;
+				try {
+					num = Float.parseFloat(s);
+					instance.setScaledHorizontalSpeed(num);
+				}
+				catch (Exception e){}
+			}
+		};
+		abstract void set(GameEngine instance, String s);
+	}
+	
 	public static final String LVLS_PATH = "levels/level";
 	public static int DEATH_COUNT = 0;
 	
@@ -59,6 +113,8 @@ public class GameEngine {
 		gameView = gv;
 	}
 	
+
+
 	public static int getPlayerColor(){
 		return playerColor;
 	}
@@ -89,6 +145,38 @@ public class GameEngine {
 	
 	public void setCurrentLevel(int lvl){
 		currentLevel = lvl;
+	}
+	
+	public float getGravity(){
+		return gravity;
+	}
+	
+	public void setScaledGravity(float grav){
+		gravity = grav * scaleH;
+	}
+	
+	public float getHorizontalSpeed(){
+		return horizontalSpeed;
+	}
+	
+	public void setScaledHorizontalSpeed(float hs){
+		horizontalSpeed = scaleH * hs;
+	}
+	
+	public float getVerticalSpeed(){
+		return verticalSpeed;
+	}
+	
+	public void setScaledVerticalSpeed(float vs) {
+		verticalSpeed = scaleH * vs;
+	}
+	
+	public float getViewPortDeltaX(){
+		return viewPortDeltaX;
+	}
+	
+	public void setScaledViewPortDeltaX(float speed){
+		viewPortDeltaX = speed * scaleH;
 	}
 	
 	public void movePlayerHorizontal(float val){
@@ -218,24 +306,31 @@ public class GameEngine {
 			String line;
 			level = new ArrayList<GameBlock>();
 			while ((line = br.readLine()) != null){
-				RectF r = new RectF();
-				String [] arr = line.split("\t");
-				r.left = scaleW * Integer.parseInt(arr[0]);
-				r.top = scaleH * Integer.parseInt(arr[1]);
-				r.right = scaleW * Integer.parseInt(arr[2]);
-				r.bottom = scaleH * Integer.parseInt(arr[3]);
-				GameBlock gb = new GameBlock(this);
-				gb.setBlockRect(r);
-				if (arr.length > 4){
-					gb.isMoving = true;
-					gb.xDir = scaleW * Float.parseFloat(arr[4]);
-					gb.yDir = scaleH * Float.parseFloat(arr[5]);
+				if (!Character.isDigit(line.charAt(0))){
+					String st = line.substring(0, line.indexOf('='));
+					String end = line.substring(line.indexOf('=') + 1);
+					SetVar.valueOf(st).set(this, end);
 				}
-				if (arr.length > 6){
-					// get params, currently only collider
-					gb.hasCollider = true;
+				else {
+					RectF r = new RectF();
+					String [] arr = line.split("\t");
+					r.left = scaleW * Integer.parseInt(arr[0]);
+					r.top = scaleH * Integer.parseInt(arr[1]);
+					r.right = scaleW * Integer.parseInt(arr[2]);
+					r.bottom = scaleH * Integer.parseInt(arr[3]);
+					GameBlock gb = new GameBlock(this);
+					gb.setBlockRect(r);
+					if (arr.length > 4){
+						gb.isMoving = true;
+						gb.xDir = scaleW * Float.parseFloat(arr[4]);
+						gb.yDir = scaleH * Float.parseFloat(arr[5]);
+					}
+					if (arr.length > 6){
+						// get params, currently only collider
+						gb.hasCollider = true;
+					}
+					level.add(gb);
 				}
-				level.add(gb);
 			}
 			br.close();
 		}

@@ -27,6 +27,8 @@ public class GameView extends ScrollBackgroundView implements Runnable,  Surface
 	private int newWhite = 0xfffffffe;
 	private int deathCounterX;				// Death counter's position
 	private int deathCounterY;
+	private int modTextX;
+	private String modText = null;
 	private int bigTextSz = 120;
 	private int medTextSz = 60;
 	private int smallTextSz = 40;
@@ -76,6 +78,7 @@ public class GameView extends ScrollBackgroundView implements Runnable,  Surface
 	protected void initialize() {
 		deathCounterX = screenWidth * 3 / 18;
 		deathCounterY = screenHeight * 1 / 9;
+		modTextX = screenWidth * 15 / 18;
 		
 		// Scaling here
 		bigTextSz = (int) (scaleH * bigTextSz);
@@ -130,7 +133,7 @@ public class GameView extends ScrollBackgroundView implements Runnable,  Surface
 				engine.movePlayerVertical();
 				engine.movePlayerHorizontal(screenRotation);
 				drawPlayer();
-				showDeathsText();
+				showGameTexts();
 				lockDrawAndPost();
 				
 				t1 = System.currentTimeMillis();
@@ -251,9 +254,13 @@ public class GameView extends ScrollBackgroundView implements Runnable,  Surface
 		return xCorrected;
 	}
 	
-	void showDeathsText(){
+	void showGameTexts(){
 		String str = "Deaths : " + LevelManager.getDeaths(selectedLevel);
 		showText(str, deathCounterX, deathCounterY, smallTextSz);
+		
+		if (modText != null){
+			showText(modText, modTextX, deathCounterY, smallTextSz);
+		}
 	}
 	
 	void performDraws(){
@@ -367,5 +374,9 @@ public class GameView extends ScrollBackgroundView implements Runnable,  Surface
 	
 	public void setGameOver(){
 		gameOver = true;
+	}
+
+	public void setInfoText(String s){
+		modText = s;
 	}
 }
