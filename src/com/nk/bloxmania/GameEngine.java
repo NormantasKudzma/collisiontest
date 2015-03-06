@@ -306,7 +306,7 @@ public class GameEngine {
 			String line;
 			level = new ArrayList<GameBlock>();
 			while ((line = br.readLine()) != null){
-				if (!Character.isDigit(line.charAt(0))){
+				if (!Character.isDigit(line.charAt(0)) && !(line.charAt(0) == '-')){
 					String st = line.substring(0, line.indexOf('='));
 					String end = line.substring(line.indexOf('=') + 1);
 					SetVar.valueOf(st).set(this, end);

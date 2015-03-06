@@ -1,0 +1,152 @@
+General
+
+*Attack on hit procs will now correctly trigger even if the attack is absorbed [rev 1002]
+*Pets will no longer suffer from snare effects if only the owner is affected [rev 1018]
+*The following spells and items have their spell data coefficients adjusted: Arcane Explosion, Fiery Blaze Enchantment, Blazefury Medallion, Fiery Retributer, Fiery Plate Gauntlets, Storm Gauntlets, Arcanite Champion, Enchant Weapon - Crusader, Shard of the Fallen Star [db 5280]
+*All Moonwells are now functioning again [db 5340]
+*The Undercity graveyard will now function correctly [db 5351]
+
+
+Raids and Dungeons
+
+*The Frozen Runes in Naxxramas will no longer respawn until the end of the raid lock[db 1002]
+*Several creatures in Zul Gurub have their armor values adjusted [db 1030]
+*An issue with 'Invisible NPCs' in The Stockades has been resolved [db 1026]
+*The Relic Coffers are now back in Blackrock Depths [db 1029]
+*The Supply Crates in Stratholme have their loot and respawn times adjusted [db 1034]
+*Various items that can be found in Zul'Gurub will no longer drop from creatures [db 1035]
+*Upon entering Zul'Gurub, players now have correct orientation [db 5393]
+*The Eggs involved in Buru's encounter will no longer follow or move after players [db 1053]
+*Blackwing Warlocks are now immune to polymorph and other similar CC affects [db 1073]
+*Son of Hakkar will now respawn after 60 seconds down from 2 minutes [db 1076]
+*Gluth's Mortal Wound is now single target ability [db 1077]
+
+
+Creatures
+
+*Adjusted and corrected the loot table and drop rates of the Drywallow Vicejaw creatures [db 1010]
+*Guild Service NPCs will no longer incorrectly sell tabards [db 1007]
+*The Wizards around Dalaran now have correct gossip for Alliance players [db 5332]
+*Gregor MacVince will now interact with players [db 5341]
+*Woshoolay now has his aura [db 5343]
+*Blackrock Ambusher is now hostile to players [db 1015]
+*Crypt Crawler will no longer cast Soul Trap [db 5349]
+*Uthil Mooncallers will now behave properly [db 5353] 
+*Ursius now has his attack speed adjusted [db 5355]
+*The creature Slavering Worg has his attack speed adjusted [db 5356]
+*Drysnap Crawler will now also use melee attacks [db 5357]
+*Ambassador Infernus will no longer be immune to Frost attacks [db 1020]
+*The Twilight Overlords will now use all of their abilities [db 1025]
+*Polly is now back on the ship! [db 1027]
+*Noggle Ficklespragg is back in Silithus [db 1045]
+*The creatures Kurzen Commando can now be spotted with stealth detection abilities [db 1055]
+*Frostmaw has his spawn location adjusted [db 1048]
+*Darkshore's Beached Sea Creatures are now relocated accordingly [db 1057]
+*Henry Stern will now teach us how to make Goldthorn Tea [db 1058]
+*A minor issue with Durtham Greldon has been resolved [db 1054]
+*Fiora Longears has been relocated [db 1069]
+*A very strange and suspicious object in Razorfen Kraul has been removed [db 1071]
+
+
+Items
+
+*The quests for Qiraji Armaments and Qiraji Regalia are now repeatable [db 5338]
+*Hearthstones will now no longer be sold by Innkeepers, instead they will be created upon setting new Heartstone location [db 1019]
+*Blood Shards and Rethban Ores have their loot values adjusted [db 1017]
+*An issue with Enchant Cloak - Minor Agility has been resolved [db 5335]
+*Electropellers can now be obtained through Fishing [db 5334]
+*The amount of Giant Clams have been significantly increased [db 5337]
+*Staff of the Ruin's drop chance has been reverted to what it was previously [Rev 5787][Rev 5791]
+*Pattern: Runed Stygian Leggings will now be obtainable only through mail [db 5342]
+*The following items now have limited stock: Pattern: Bramblewood Belt, Pattern: Bramblewood Boots, Pattern: Bramblewood Helm, Pattern: Dreamscale Breastplate, Pattern: Sandstalker Bracers, Pattern: Sandstalker Breastplate, Pattern: Sandstalker Gauntlets, Pattern: Spitfire Bracers, Pattern: Spitfire Breastplate, Pattern: Spitfire Gauntlets [db 5345]
+*An issue with invisible Bonfire in Thousand Needles has been resolved [db 1028]
+*The floating signs in Dustwallow Marsh are now removed [db 1046]
+*More wrongly positioned objects in Dustwallow Marsh have been removed [db 1068]
+*Yeh'kinya will now offer Yeh'kinya's Scroll [db 1074]
+
+
+Quests
+
+*A minor issue with the quest The Summoning has been resolved [db 5336]
+*A minor issue with the quest The Demon Forge has been resolved [db 5346]
+*A minor issue with the quest The Escape has been resolved [db 5350]
+*A minor issue with the quest Vilebranch Hooligans has been resolved [db 1049]
+*A minor issue with the quest Kurzen's Mystery has been resolved [db 1066]
+*You can now find the Boat while on the quest The Missing Courier in Feralas [db 5352] 
+*Battle of Warsong Gulch is now also available for level 19 players [db 1065]
+*The quest A Donation of Runecloth now rewards with experience [db 5347]
+*The quests Your Fortune Awaits You has their level requirement adjusted [db 5354]
+*Hive'Regal and Hive'Ashi Scout Reports are now obtainable [db 1021]
+*The quest A Terrible Purpose is now obtainable [db 1022]
+*The quest chanin Raene's Cleansing now has its level requirements adjusted [db 1070]
+*A minor gossip issue of the quest The Color of Blood has been adjusted [db 1023]
+*Sargath now has correct gossip while on the quest Tower of Althalaxx [db 1031]
+*The quest The Prodigal Lich now has involves a mini event [db 1041]
+*The quest A Grim Discovery now has its level requirement adjusted [db 1067]
+*Galen Goodward will now fight together with players while on the quest Galen's Escape [db 1044]
+*The quest Elven Legends can be completed now [db 1047]
+*Renzik "The Shiv" will now continue the quest line for Rogues after level 16 [db 1009]
+*The quest Find the Gems in Uldum will be completable now [db 1052]
+*The sacks involved in the quest Winds of the Desert are now much easier to be found [db 1056]
+*A minor gossip issue after completing the quest line of Archaeologist Flagongut has been resolved [db 1059]
+*A minor gossip issue after completing the quest Orendil's Cure has been resolved [db 1060]
+*A minor gossip issue after completing the quest Elune's Tear has been resolved [db 1061]
+*A minor gossip issue after completing the quest Fallen Sky Lake has been resolved [db 1062]
+*The Tome of Mel'thandris in the Howling Vale now has a mini event [db 1063][db 1063a]
+*A minor gossip issue with the quest The Scythe of Elune has been resolved [db 1064]
+*Upon completing the quest For The Horde! players will now receive Warchief's Blessing [db 1072]
+*The Priest quest Hex of Weakness can now be completed [db 1075]
+
+
+Druid
+
+*Faerie Fire will now be correctly displayed in the Talent tree [rev 1019]
+*Fixed starfire damage scaling coefficient values in database (damage reduced approx. 8%) [Rev 6552]
+
+
+Mage
+
+*An issue with dispel mechanics and Combustion has been resolved [db 1006]
+
+
+Paladin
+
+*ammer of Wrath will now correctly scale with spell damage [db 1008]
+
+
+Hunter
+
+*Hunter Freezing Trap will now be able to freeze more than one target through multiple traps [rev 1007]
+*Hunter Freezing Trap will now be subject to heartbeat resist [rev 1021]
+*Auto Repeat spells will no longer improperly interrupt under snare and root affects [rev 1022]
+
+
+Priest
+
+*Vestments of Transcendence 8 pieces set bonus will correctly scale with healing power [db 1004]
+
+
+Rogue
+
+*Rank 1 of Initiative will now function correctly [rev 1017]
+
+
+Shaman
+
+*Grounding Totem will now always have 10 seconds recharge time [rev 1006]
+*Lightning Shield will no longer cause spell pushback [rev 1009]
+
+
+Warlock
+
+*Ritual of Summoning will no longer spawn the summoning portal in a position that is out of line-of-sight from the caster [rev 5660]
+
+
+Warrior
+
+*The additional attacks generated by Sweeping Strike will now properly take into account the armor of the second target [rev 3279][rev 1010]
+
+
+Miscellaneous
+
+*Several Internal Changes have been implemented
